@@ -1,0 +1,14 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+  min-height: 100vh; /* 确保 body 占满视口高度 */
+  background-color: #000; /* 背景颜色与代码中的 background(0) 保持一致 */
+}
+
+/* 移除画布周围的默认边框 */
+canvas {
+  display: block;
+}
