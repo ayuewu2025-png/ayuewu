@@ -15,7 +15,7 @@ canvas {
   top: 0;
   left: 0;
   z-index: 10; /* 确保它在最上层 */
-  width:100%
+  width:100vw
   height:600px
 }
 
@@ -28,7 +28,7 @@ canvas {
 .portfolio-container {
     background-color: #111; 
     color: white;
-    
+    padding-top: 50px
     padding-bottom: 50px;
 }
 
