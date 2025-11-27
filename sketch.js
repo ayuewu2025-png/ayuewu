@@ -2,24 +2,24 @@
 let numLines = 50;
 
 function setup() {
-  // 创建一个 600x600 的画布
-  createCanvas(windowWidth, windowHeight);
+  // 保持画布宽度铺满，高度固定为 600px，与 CSS 中的高度保持一致
+  createCanvas(windowWidth, 600); 
   background(0);
-  // smooth() 在 p5.js 中通常是默认启用的
-  stroke(255, 16); // 初始线条颜色和透明度
+  stroke(255, 16); 
 }
 
 function draw() {
-  // 每一帧清空并重新绘制黑色背景
+  // 每次窗口大小变化时，重新设置画布尺寸以保持全宽
+  if (width !== windowWidth) {
+    resizeCanvas(windowWidth, 600);
+  }
+  
   background(0);
-  stroke(25, 25, 255);
+  stroke(25, 25, 255); // 蓝色的几何图形
   noFill();
   
-  // 绘制几何图形，参数固定为 50
   platonic(50);
-  
-  // 绘制雨点效果
-  rain();
+  rain(); // 粉色的雨
 }
 
 function rain() {
@@ -28,17 +28,16 @@ function rain() {
   for (let i = 0; i < numLines; i = i + 1) {
     let x = random(width);
     let y1 = random(height);
-    let y2 = y1 + random(5, 20); // 长度随机
-    line(x, y1, x, y2); // 绘制垂直的雨线
+    let y2 = y1 + random(5, 20); 
+    line(x, y1, x, y2); 
   }
 }
 
 function platonic(nv) {
-  let r = 150; // 半径
-  beginShape(); // 开始绘制形状，但在此代码中只用于 line() 的循环
+  let r = 150; 
+  beginShape(); 
 
   for (let i = 0; i < nv; i++) {
-    // 计算多边形的每个顶点坐标
     let a = i * (2 * PI / nv);
     let pX = width / 2 + cos(a) * r;
     let pY = height / 2 + sin(a) * r;
