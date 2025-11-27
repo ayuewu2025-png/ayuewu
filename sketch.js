@@ -3,7 +3,7 @@ let numLines = 50;
 
 function setup() {
   // 创建一个 600x600 的画布
-  createCanvas(600, 600);
+  createCanvas(windowWidth, windowHeight);
   background(0);
   // smooth() 在 p5.js 中通常是默认启用的
   stroke(255, 16); // 初始线条颜色和透明度
