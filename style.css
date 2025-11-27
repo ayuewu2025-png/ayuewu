@@ -30,7 +30,7 @@ html, body {
     height: 600px; /* 这个容器将撑开 600px 的空间 */
     position: relative; /* 确保它正常流动 */
     z-index: 5; /* 在雨点之上 */
-    background-color: #000; /* 确保背景是黑色，遮住下方的雨点 */
+    background-color: rgba(0, 0, 0, 0.85); /* 确保背景是黑色，遮住下方的雨点 */
 }
 #main-sketch-container canvas {
     display: block;
@@ -42,7 +42,7 @@ html, body {
 .portfolio-container {
     position: relative; /* 确保在雨点之上 */
     z-index: 5; 
-    background-color: #111; /* 确保背景色不是透明的，否则雨点会穿透内容 */
+    background-color:rgba(0, 0, 0, 0.85); /* 确保背景色不是透明的，否则雨点会穿透内容 */
     padding-top: 50px; 
     padding-bottom: 50px;
     /* ... (其他作品集样式保持不变) ... */
