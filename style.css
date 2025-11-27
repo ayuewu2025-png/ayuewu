@@ -40,7 +40,8 @@ html, body {
 .portfolio-container {
     position: relative; 
     z-index: 5; 
-    background-color: rgba(17, 17, 17, 0.6); /* 半透明深灰色背景，让雨点隐约可见 */
+    background-color: transparent;
+ /* 半透明深灰色背景，让雨点隐约可见 */
     padding-top: 50px; 
     padding-bottom: 50px;
 }
