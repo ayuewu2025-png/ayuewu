@@ -2,9 +2,9 @@ html, body {
   margin: 0;
   padding: 0;
   width: 100%;
-  height: 100%; /* 确保 body 高度为 100%，以让雨点可以全屏固定 */
+  height: 100%; 
   overflow-x: hidden; 
-  background-color: #000;
+  background-color: transparent; /* 整个页面的背景就是雨点 */
   font-family: Arial, sans-serif;
 }
 
@@ -17,35 +17,32 @@ html, body {
     height: 100%;
     z-index: 1; /* 最底层 */
     pointer-events: none; /* 允许鼠标点击穿透 */
-    /* p5.js 会在这个容器里创建 canvas */
 }
 #rain-background-container canvas {
-    display: block; /* 确保画布是块级元素 */
+    display: block; 
 }
 
 
-/* 2. 主画布容器 (蓝色互动图形)：作为页面的正常组成部分，可以滚动 */
+/* 2. 主画布容器 (蓝色互动图形)：正常流动，半透明背景，在雨点之上 */
 #main-sketch-container {
     width: 100%;
-    height: 600px; /* 这个容器将撑开 600px 的空间 */
-    position: relative; /* 确保它正常流动 */
+    height: 600px; 
+    position: relative; /* 正常流动 */
     z-index: 5; /* 在雨点之上 */
-    background-color: rgba(0, 0, 0, 0.85); /* 确保背景是黑色，遮住下方的雨点 */
+    background-color: rgba(0, 0, 0, 0.4); /* 半透明黑色背景，让雨点隐约可见 */
 }
 #main-sketch-container canvas {
     display: block;
-    /* p5.js 会在这个容器里创建 canvas，让它填充容器 */
 }
 
 
-/* 3. 作品集容器 */
+/* 3. 作品集容器：在雨点之上，半透明背景 */
 .portfolio-container {
-    position: relative; /* 确保在雨点之上 */
+    position: relative; 
     z-index: 5; 
-    background-color:rgba(0, 0, 0, 0.85); /* 确保背景色不是透明的，否则雨点会穿透内容 */
+    background-color: rgba(17, 17, 17, 0.6); /* 半透明深灰色背景，让雨点隐约可见 */
     padding-top: 50px; 
     padding-bottom: 50px;
-    /* ... (其他作品集样式保持不变) ... */
 }
 
 /* 4. 每个作品集行 */
@@ -66,28 +63,49 @@ html, body {
 /* 6. 图片流容器：实现左右可滚动 */
 .image-stream {
     display: flex;
-    overflow-x: auto; 
+    overflow-x: auto; /* 关键：允许水平滚动 */
     padding: 0 50px 20px 50px; 
     -webkit-overflow-scrolling: touch; 
     scrollbar-width: none; 
     -ms-overflow-style: none;
+    
+    /* ***** 关键修改：使图片流居中 ***** */
+    justify-content: center; /* 在内容不足以滚动时居中 */
+    /* 添加一个内层 div 来实现真正的居中滚动 */
+    /* 或者使用 padding-left 和 padding-right 结合 transform */
+    /* 更简单的居中方案是让内部元素足够多，或者使用 grid */
+    /* 对于 flexbox 滚动，justify-content: center 只在内容不够铺满时有效 */
+    /* 为了视觉居中，我们用一个技巧：使用内边距结合负 margin */
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content; /* 让滚动条只出现在内容区域 */
+    max-width: calc(100% - 100px); /* 留出 50px 边距 */
 }
-.image-stream::-webkit-scrollbar {
-    display: none; 
+/* 解决 `justify-content: center` 和 `overflow-x: auto` 的矛盾：
+   flex 容器居中后，如果内容超出了，滚动条会在中间。
+   更常见和美观的做法是容器本身不居中，而是内容左对齐滚动。
+   如果一定要**视觉上居中**，通常是在 image-stream 内部再嵌套一个 flex 容器来居中。
+   但为了代码简洁，我们保持 flex 容器本身的滚动性，并确保内容足够多时可以滚动。 */
+.image-stream::before,
+.image-stream::after {
+    content: '';
+    flex-shrink: 0;
+    width: 50px; /* 两侧留出空白 */
 }
+
 
 /* 7. 单个图片项目样式 */
 .portfolio-item {
     flex-shrink: 0; 
     margin-right: 20px;
     transition: transform 0.3s ease;
-    border: 3px solid #333; 
+    border: 3px solid #FF1493; /* 边框改为粉色 */
     line-height: 0; 
 }
 
 .portfolio-item:hover {
     transform: translateY(-5px); 
-    border-color: #FF1493; 
+    border-color: #1E90FF; /* 悬停时边框变蓝色 */
 }
 
 .portfolio-item img {
