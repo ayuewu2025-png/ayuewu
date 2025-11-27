@@ -7,7 +7,7 @@ new p5(function(p) {
     p.setup = function() {
         // 创建雨点画布，并附加到 #rain-background-container
         p.createCanvas(p.windowWidth, p.windowHeight).parent('rain-background-container');
-        p.background(0); // 初始黑色背景
+        p.background(0，0); // 初始黑色背景
     };
 
     p.draw = function() {
