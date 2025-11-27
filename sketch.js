@@ -1,5 +1,5 @@
 let numLines = 50;
-let mouseIsOverCanvas = false; // 用于控制鼠标是否在画布上方
+let mouseIsOverCanvas = false;
 
 // ===========================================
 // 1. 雨点画布实例 (全屏固定背景)
@@ -7,7 +7,7 @@ let mouseIsOverCanvas = false; // 用于控制鼠标是否在画布上方
 new p5(function(p) {
     p.setup = function() {
         p.createCanvas(p.windowWidth, p.windowHeight).parent('rain-background-container');
-        p.background(0);
+        p.background(0); // 初始背景颜色
     };
 
     p.draw = function() {
@@ -15,7 +15,7 @@ new p5(function(p) {
             p.resizeCanvas(p.windowWidth, p.windowHeight);
         }
         
-        p.background(0, 50); 
+        p.background(0, 50); // 带有半透明黑色（alpha=50），实现雨点拖影效果
         p.stroke(255, 30, 184, 150); 
         
         for (let i = 0; i < numLines; i = i + 1) {
@@ -37,51 +37,66 @@ new p5(function(p) {
 // ===========================================
 new p5(function(p) {
     let CANVAS_HEIGHT = 600; // 固定高度
-    let lastMouseX = -999; // 存储上次鼠标位置
+    let lastMouseX = -999; 
     let lastMouseY = -999;
+    let ctx; // 用于强制清除画布上下文
+    let canvasElement; // 用于存储画布 DOM 元素
 
     p.setup = function() {
-       let canvas = p.createCanvas(p.windowWidth, CANVAS_HEIGHT, p.P2D).parent('main-sketch-container');
-     ctx = canvas.elt.getContext('2d');
-        p.background(0, 0); // 完全透明背景
+        // 创建画布并强制使用 P2D 渲染模式 (解决叠加问题)
+        let canvas = p.createCanvas(p.windowWidth, CANVAS_HEIGHT, p.P2D).parent('main-sketch-container');
+        
+        // 获取原生画布的上下文，用于强制清除
+        ctx = canvas.elt.getContext('2d'); 
+        canvasElement = canvas.elt;
+        
+        p.background(0, 0); // 确保初始背景完全透明
         p.noFill();
 
-        // 鼠标进入/离开事件监听
-        canvas.elt.addEventListener('mouseenter', () => mouseIsOverCanvas = true);
-        canvas.elt.addEventListener('mouseleave', () => mouseIsOverCanvas = false);
+        // 鼠标进入/离开事件监听 (桌面端)
+        canvasElement.addEventListener('mouseenter', () => mouseIsOverCanvas = true);
+        canvasElement.addEventListener('mouseleave', () => mouseIsOverCanvas = false);
     };
 
     p.draw = function() {
         if (p.width !== p.windowWidth) {
             p.resizeCanvas(p.windowWidth, CANVAS_HEIGHT);
         }
+        
+        // ********** 强制清除画布 (解决叠加问题) **********
         if (ctx) {
             ctx.clearRect(0, 0, p.width, p.height);
         } else {
-             // 作为回退，以防 ctx 获取失败
              p.background(0, 0); 
         }
-        p.background(0, 0); // 完全透明背景
+        // **********************************************
+        
         p.stroke(25, 25, 255); 
         
-        // 只有当鼠标在画布上方时才更新 lastMouseX/Y
+        // 检查鼠标/触摸是否在画布范围内
+        let isOver = p.mouseX >= 0 && p.mouseX <= p.width && p.mouseY >= 0 && p.mouseY <= p.height;
+        mouseIsOverCanvas = isOver; // 更新全局状态
+        
         if (mouseIsOverCanvas) {
             lastMouseX = p.mouseX;
             lastMouseY = p.mouseY;
         } 
         
-        // 只有当鼠标在画布上方或有上次记录的位置时才绘制
+        // 绘制逻辑
         if (mouseIsOverCanvas || (lastMouseX !== -999 && lastMouseY !== -999)) {
             platonic(p, 50, lastMouseX, lastMouseY);
         }
-        
-        // 如果鼠标移出且位置有效，停止更新lastMouseX/Y，图形会停在上次位置
-        if (!mouseIsOverCanvas && lastMouseX !== -999) {
-            // 可以选择清空图形或者让它停留在原地
-            // 如果希望图形完全消失，可以在这里设置 lastMouseX = -999;
-            // 为了“停止追踪”的效果，我们让它停留在移开时的位置
+    };
+    
+    // ********* 触摸事件支持 (手机端) *********
+    // 阻止浏览器默认滚动/缩放
+    p.touchMoved = function() {
+        if (p.mouseX >= 0 && p.mouseX <= p.width && p.mouseY >= 0 && p.mouseY <= p.height) {
+            // 阻止默认行为，让互动优先
+            return false; 
         }
     };
+    // ***************************************
 
     function platonic(p, nv, centerX, centerY) {
         let r = 150; 
@@ -90,7 +105,7 @@ new p5(function(p) {
             let a = i * (2 * Math.PI / nv);
             let pX = p.width / 2 + p.cos(a) * r;
             let pY = p.height / 2 + p.sin(a) * r;
-            p.line(centerX, centerY, pX, pY); // 使用传递进来的 centerX, centerY
+            p.line(centerX, centerY, pX, pY); 
         }
         p.endShape(p.CLOSE);
     }
