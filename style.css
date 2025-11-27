@@ -11,10 +11,7 @@ html, body {
 /* 1. 蓝色互动图形（p5.js 画布）固定在顶部 */
 canvas {
   display: block;
-  position: fixed; /* 保持固定 */
-  top: 0;
-  left: 0;
-  z-index: 10; /* 确保它在最上层 */
+ 
   width:100vw
   height:600px
 }
