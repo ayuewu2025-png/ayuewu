@@ -17,9 +17,6 @@ canvas {
 }
 
 /* 2. 底部占位符，高度与画布高度一致 */
-.canvas-placeholder {
-    height: 600px; /* 匹配 sketch.js 中的固定高度 */
-}
 
 /* 3. 作品集容器 */
 .portfolio-container {
