@@ -41,7 +41,7 @@ new p5(function(p) {
     let lastMouseY = -999;
 
     p.setup = function() {
-        let canvas = p.createCanvas(p.windowWidth, CANVAS_HEIGHT).parent('main-sketch-container');
+       let canvas = p.createCanvas(p.windowWidth, CANVAS_HEIGHT, p.P2D).parent('main-sketch-container');
         p.background(0, 0); // 完全透明背景
         p.noFill();
 
