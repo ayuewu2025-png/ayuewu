@@ -19,19 +19,10 @@ function draw() {
   noFill();
   
   platonic(50);
-  rain(); // 粉色的雨
+ // rain(); // 粉色的雨
 }
 
-function rain() {
-  stroke(255, 30, 184, 150); // 粉红色，略带透明
-  
-  for (let i = 0; i < numLines; i = i + 1) {
-    let x = random(width);
-    let y1 = random(height);
-    let y2 = y1 + random(5, 20); 
-    line(x, y1, x, y2); 
-  }
-}
+
 
 function platonic(nv) {
   let r = 150; 
