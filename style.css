@@ -1,63 +1,51 @@
 html, body {
-  /* 基础设置：移除边距，允许页面滚动 */
   margin: 0;
   padding: 0;
   width: 100%;
-  overflow-x: hidden; /* 隐藏主页面的横向滚动条 */
+  height: 100%; /* 确保 body 高度为 100%，以让雨点可以全屏固定 */
+  overflow-x: hidden; 
   background-color: #000;
   font-family: Arial, sans-serif;
 }
 
-/* 1. 蓝色互动图形（p5.js 画布）固定在顶部 */
-canvas {
-  display: block;
-  width:100vw;
-    height:600px;
-  height:600px;
-  z-index: 11;
-}
-
-/* 2. 底部占位符，高度与画布高度一致 */
-.rain-overlay {
-    position: fixed; /* 必须是 fixed 才能覆盖整个页面且不随滚动条移动 */
+/* 1. 全屏雨点容器及画布：固定在最底层 */
+#rain-background-container {
+    position: fixed; 
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 1; /* 位于底层，低于画布 (11) 和其他内容 (例如 5) */
-    
-    /* ***** 核心：使用 CSS 属性来创建雨点效果 ***** */
-    background: repeating-linear-gradient(
-        transparent, 
-        transparent 100px, 
-        rgba(255, 30, 184, 0.4) 101px, 
-        rgba(255, 30, 184, 0.4) 110px
-    );
-    /* 调整 background-size 和 animation 来创建下落效果 */
-    background-size: 2px 1000px; 
-    animation: rain-fall 6s linear infinite;
-    /* ********************************************* */
+    z-index: 1; /* 最底层 */
+    pointer-events: none; /* 允许鼠标点击穿透 */
+    /* p5.js 会在这个容器里创建 canvas */
+}
+#rain-background-container canvas {
+    display: block; /* 确保画布是块级元素 */
 }
 
-/* 3. CSS 关键帧动画：让背景向下移动 */
-@keyframes rain-fall {
-    from {
-        background-position-y: 0;
-    }
-    to {
-        /* 向下移动 1000px，形成循环下落 */
-        background-position-y: 1600px; 
-    }
+
+/* 2. 主画布容器 (蓝色互动图形)：作为页面的正常组成部分，可以滚动 */
+#main-sketch-container {
+    width: 100%;
+    height: 600px; /* 这个容器将撑开 600px 的空间 */
+    position: relative; /* 确保它正常流动 */
+    z-index: 5; /* 在雨点之上 */
+    background-color: #000; /* 确保背景是黑色，遮住下方的雨点 */
 }
+#main-sketch-container canvas {
+    display: block;
+    /* p5.js 会在这个容器里创建 canvas，让它填充容器 */
+}
+
+
 /* 3. 作品集容器 */
 .portfolio-container {
-   
-  position: relative; /* 确保内容在雨点之上 */
-    z-index: 5;
-  background-color: #111; 
-    color: white;
-    padding-top: 50px;
+    position: relative; /* 确保在雨点之上 */
+    z-index: 5; 
+    background-color: #111; /* 确保背景色不是透明的，否则雨点会穿透内容 */
+    padding-top: 50px; 
     padding-bottom: 50px;
+    /* ... (其他作品集样式保持不变) ... */
 }
 
 /* 4. 每个作品集行 */
@@ -71,18 +59,16 @@ canvas {
     text-transform: uppercase;
     font-size: 2em;
     font-weight: bold;
-    color: white; /* 标题颜色 */
-    margin-bottom: 0;
+    color: #FFD700; 
+    margin-bottom: 30px;
 }
 
 /* 6. 图片流容器：实现左右可滚动 */
 .image-stream {
     display: flex;
-    overflow-x: auto; /* 关键：允许水平滚动 */
-    padding: 0 50px 20px 50px; /* 两边留白，美观 */
+    overflow-x: auto; 
+    padding: 0 50px 20px 50px; 
     -webkit-overflow-scrolling: touch; 
-    
-    /* 隐藏滚动条 (可选) */
     scrollbar-width: none; 
     -ms-overflow-style: none;
 }
@@ -95,18 +81,18 @@ canvas {
     flex-shrink: 0; 
     margin-right: 20px;
     transition: transform 0.3s ease;
-    border: 3px solid #333; /* 边框 */
-    line-height: 0; /* 移除图片下的空行 */
+    border: 3px solid #333; 
+    line-height: 0; 
 }
 
 .portfolio-item:hover {
-    transform: translateY(-5px); /* 悬停时略微上移 */
-    border-color: #FF1493; /* 悬停时边框变色 */
+    transform: translateY(-5px); 
+    border-color: #FF1493; 
 }
 
 .portfolio-item img {
-    height: 300px; /* 固定图片高度 */
+    height: 300px; 
     width: auto;
     display: block;
-    object-fit: cover; /* 确保图片覆盖指定高度 */
+    object-fit: cover; 
 }
