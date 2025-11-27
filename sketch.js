@@ -42,6 +42,7 @@ new p5(function(p) {
 
     p.setup = function() {
        let canvas = p.createCanvas(p.windowWidth, CANVAS_HEIGHT, p.P2D).parent('main-sketch-container');
+     ctx = canvas.elt.getContext('2d');
         p.background(0, 0); // 完全透明背景
         p.noFill();
 
@@ -54,7 +55,12 @@ new p5(function(p) {
         if (p.width !== p.windowWidth) {
             p.resizeCanvas(p.windowWidth, CANVAS_HEIGHT);
         }
-        
+        if (ctx) {
+            ctx.clearRect(0, 0, p.width, p.height);
+        } else {
+             // 作为回退，以防 ctx 获取失败
+             p.background(0, 0); 
+        }
         p.background(0, 0); // 完全透明背景
         p.stroke(25, 25, 255); 
         
