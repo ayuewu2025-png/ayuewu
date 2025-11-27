@@ -11,18 +11,52 @@ html, body {
 /* 1. 蓝色互动图形（p5.js 画布）固定在顶部 */
 canvas {
   display: block;
- 
-  width:100vw
-  height:600px
+  width:100vw;
+    height:600px;
+  height:600px;
+  z-index: 11;
 }
 
 /* 2. 底部占位符，高度与画布高度一致 */
+.rain-overlay {
+    position: fixed; /* 必须是 fixed 才能覆盖整个页面且不随滚动条移动 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* 位于底层，低于画布 (11) 和其他内容 (例如 5) */
+    
+    /* ***** 核心：使用 CSS 属性来创建雨点效果 ***** */
+    background: repeating-linear-gradient(
+        transparent, 
+        transparent 100px, 
+        rgba(255, 30, 184, 0.4) 101px, 
+        rgba(255, 30, 184, 0.4) 110px
+    );
+    /* 调整 background-size 和 animation 来创建下落效果 */
+    background-size: 2px 1000px; 
+    animation: rain-fall 6s linear infinite;
+    /* ********************************************* */
+}
 
+/* 3. CSS 关键帧动画：让背景向下移动 */
+@keyframes rain-fall {
+    from {
+        background-position-y: 0;
+    }
+    to {
+        /* 向下移动 1000px，形成循环下落 */
+        background-position-y: 1600px; 
+    }
+}
 /* 3. 作品集容器 */
 .portfolio-container {
-    background-color: #111; 
+   
+  position: relative; /* 确保内容在雨点之上 */
+    z-index: 5;
+  background-color: #111; 
     color: white;
-    padding-top: 50px
+    padding-top: 50px;
     padding-bottom: 50px;
 }
 
