@@ -1,65 +1,1755 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>阿月阿月阿月阿月阿月阿月</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.1/p5.min.js"></script>
-    <script src="sketch.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <title>Portfolio Framework</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'DFH-DIN';
+            src: url('DFH-DIN1.TTF') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            color: #ededed;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.5;
+            pointer-events: none;
+            transform: translateZ(0);
+            will-change: transform, opacity;
+        }
+
+        .header-bar {
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 4rem 3rem;
+            position: fixed;
+            height: 100vh;
+            box-sizing: border-box;
+            z-index: 10;
+        }
+
+        .name-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .name-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-decoration: none;
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
+
+        .name-sub {
+            font-size: 0.75rem;
+            margin-left: 0.2ch;
+            color: #a0a0a0;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex: 1;
+            padding-bottom: 2rem;
+        }
+
+        .nav-top-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-link {
+            font-size: 1.0rem;
+            font-weight: 500;
+            text-decoration: none;
+            color: #c2c2c2;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            color: #ffffff;
+        }
+
+        .sub-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            overflow: hidden;
+            max-height: 0; 
+            opacity: 0;
+            padding-left: 1rem;
+            transition: max-height 0.4s ease, opacity 0.4s ease, margin-top 0.4s ease;
+        }
+        
+        .nav-item:hover .sub-menu,
+        .nav-item.locked .sub-menu {
+            max-height: 800px;
+            opacity: 1;
+            margin-top: 1rem;
+        }
+
+        .sub-link {
+            font-size: 0.95rem;
+            color: #888888;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .sub-link:hover,
+        .sub-link.highlight {
+            color: #ffffff;
+        }
+
+        .sub-sub-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            padding-left: 1rem;
+            transition: max-height 0.4s ease, opacity 0.4s ease, margin-top 0.4s ease;
+        }
+        
+        .sub-item-group.locked .sub-sub-menu {
+            max-height: 1000px;
+            opacity: 1;
+            margin-top: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .sub-sub-link {
+            font-size: 0.85rem;
+            color: #555555;
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            line-height: 1.4;
+        }
+        .sub-sub-link:hover {
+            color: #aaaaaa;
+        }
+        .sub-sub-link.highlight {
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .content-wrapper {
+            position: relative; 
+            z-index: 1;
+            margin-left: 260px;
+            padding: 4rem;
+            flex: 1;
+            box-sizing: border-box;
+            min-height: 100vh;
+        }
+
+        .bio-text {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 800px;
+        }
+
+        .cv-container {
+            max-width: 850px;
+        }
+        .cv-section {
+            margin-bottom: 3.5rem;
+        }
+        .cv-section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #ffffff;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+        }
+        .cv-item {
+            margin-bottom: 1.8rem;
+        }
+        .cv-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 0.3rem;
+        }
+        .cv-item-role {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: #ffffff;
+        }
+        .cv-item-time {
+            font-size: 0.9rem;
+            color: #888888;
+        }
+        .cv-item-place {
+            font-size: 0.95rem;
+            color: #aaaaaa;
+            margin-bottom: 0.5rem;
+        }
+        .cv-item-desc {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.75);
+        }
+        .cv-skills-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .cv-skills-row span {
+            color: #ffffff;
+            font-weight: 500;
+        }
+        .cv-download-btn {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 0.8rem 1.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .cv-download-btn:hover {
+            background-color: #ffffff;
+            color: #000000;
+            border-color: #ffffff;
+        }
+
+        .exhibition-container {
+            max-width: 850px;
+        }
+        .exhibition-item {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 2.5rem;
+            margin-bottom: 4rem;
+            display: flex;
+            gap: 2.5rem;
+            align-items: flex-start;
+        }
+        .exhibition-img {
+            height: 100px;
+            width: auto;
+            max-width: 280px;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+        .exhibition-img:hover {
+            opacity: 0.8;
+        }
+        .exhibition-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .exhibition-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 1rem;
+            margin-bottom: 0.8rem;
+        }
+        .exhibition-title {
+            font-family: 'DFH-DIN', sans-serif;
+            font-size: 1.3rem;
+            color: #ffffff;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        .exhibition-year {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            color: #888888;
+        }
+        .exhibition-desc {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+.bio-video-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            padding-bottom: 56.25%;
+            height: 0;
+            margin-top: 2.5rem;
+            margin-bottom: 3rem;
+            background-color: #050505;
+        }
+
+        .bio-video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }      
+  @media (max-width: 768px) {
+            .exhibition-item {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            .exhibition-img {
+                width: 100%;
+                max-width: 100%;
+                height: 200px;
+            }
+        }
+
+        .contact-container {
+            max-width: 600px;
+        }
+        .contact-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: #ffffff;
+            margin-bottom: 2rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        .contact-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .contact-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        .contact-label {
+            font-size: 0.85rem;
+            color: #888888;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .contact-value {
+            font-size: 1.1rem;
+            color: #ffffff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .contact-value:hover {
+            color: #aaaaaa;
+        }
+
+        .project-list-item {
+            max-width: 500px; 
+            margin-bottom: 6rem;
+        }
+        .project-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+        .project-list-title {
+            font-family: 'DFH-DIN', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: #fff;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+        .project-list-title:hover { opacity: 0.6; }
+        .project-list-year {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .design-entity-item {
+            width: 100%;
+            max-width: 950px;
+            box-sizing: border-box;
+            margin-bottom: 7rem;
+        }
+        .entity-sub-section {
+            margin-top: 2.5rem;
+            margin-bottom: 2rem;
+        }
+        .entity-sub-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+            letter-spacing: 0.08em;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .space-archive-item {
+            max-width: 950px;
+            margin-bottom: 6rem;
+        }
+
+        .preview-scroll-track {
+            display: flex;
+            gap: 1.2rem;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-bottom: 0.8rem;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .preview-scroll-track::-webkit-scrollbar {
+            height: 4px;
+        }
+        .preview-scroll-track::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .preview-scroll-track::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .preview-scroll-img {
+            height: clamp(120px, 18vw, 180px);
+            width: auto;
+            max-width: 85vw;
+            flex-shrink: 0;
+            object-fit: contain;
+            cursor: pointer;
+            scroll-snap-align: start;
+            transition: opacity 0.3s ease;
+        }
+        .preview-scroll-img:hover {
+            opacity: 0.75;
+        }
+
+        .archive-grid-5cols {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1.2rem;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .archive-grid-5cols {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .archive-expand-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            background: none;
+            border: none;
+            padding: 0;
+            color: #ffffff;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: opacity 0.3s ease;
+            text-decoration: none;
+        }
+
+        .archive-expand-btn:hover {
+            opacity: 0.5;
+        }
+
+        .archive-expand-btn .plus-sign {
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+
+        .project-list-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1.5rem;
+            cursor: pointer;
+            align-items: start;
+        }
+        
+        .project-image-box {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+            transition: opacity 0.3s ease;
+        }
+        .project-image-box:hover {
+            opacity: 0.8;
+        }
+
+        .detail-title {
+            font-family: 'DFH-DIN', sans-serif;
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+        .detail-meta {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 3rem;
+        }
+        .detail-content {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.85);
+            max-width: 800px;
+            margin-bottom: 4rem;
+        }
+        
+        /* 标准大图样式：水平居中，最大600px */
+        .detail-big-image {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto 2.5rem auto;
+            display: block;
+            cursor: pointer;
+        }
+
+        .the-place-two-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            max-width: 520px;
+            margin: 2.5rem auto 3.5rem auto;
+            align-items: start;
+        }
+        .the-place-two-grid .detail-big-image {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 0;
+            transition: opacity 0.3s ease;
+        }
+        .the-place-two-grid .detail-big-image:hover {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .the-place-two-grid {
+                grid-template-columns: 1fr;
+                max-width: 100%;
+                margin: 2rem 0;
+            }
+        }
+
+        .video-dual-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            max-width: 850px;
+            margin-top: 2.5rem;
+            margin-bottom: 3rem;
+            box-sizing: border-box;
+        }
+        .video-box-item {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            width: 100%;
+        }
+        .video-box-item iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        @media (max-width: 768px) {
+            .video-dual-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        .gif-two-tracks-container {
+            width: 100%;
+            max-width: 850px;
+            margin-top: 3rem;
+            margin-bottom: 3.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            box-sizing: border-box;
+        }
+        .gif-single-track {
+            display: flex;
+            gap: 1.2rem;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-bottom: 0.8rem;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            box-sizing: border-box;
+        }
+        .gif-single-track::-webkit-scrollbar {
+            height: 2px;
+        }
+        .gif-single-track::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .gif-single-track::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .gif-track-item {
+            height: clamp(120px, 18vw, 170px);
+            width: auto;
+            flex-shrink: 0;
+            object-fit: contain;
+            cursor: pointer;
+            scroll-snap-align: start;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background-color: #080808;
+            transition: opacity 0.3s ease;
+        }
+        .gif-track-item:hover {
+            opacity: 0.8;
+        }
+
+        .scatter-canvas-container {
+            width: 100%;
+            max-width: 850px;
+            margin-top: 2rem;
+            margin-bottom: 3rem;
+        }
+        .scatter-canvas-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .scatter-canvas-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            color: #888888;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .scatter-shuffle-btn {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.08em;
+            padding: 0.35rem 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+        .scatter-shuffle-btn:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        .scatter-canvas {
+            position: relative;
+            width: 100%;
+            height: 520px;
+            background-color: transparent;
+            border: none;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        .scatter-photo-item {
+            position: absolute;
+            height: clamp(110px, 15vw, 150px);
+            width: auto;
+            max-width: 200px;
+            object-fit: contain;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+        .scatter-photo-item:hover {
+            transform: scale(1.12) !important;
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.95);
+            z-index: 999 !important;
+        }
+        @media (max-width: 768px) {
+            .scatter-canvas {
+                height: 380px;
+            }
+        }
+
+        .long-thumb-box {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto 2.5rem auto;
+            cursor: pointer;
+            position: relative;
+        }
+        .long-thumb-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: opacity 0.3s ease;
+        }
+        .long-thumb-box:hover .long-thumb-img {
+            opacity: 0.8;
+        }
+        .long-thumb-tip {
+            font-size: 0.8rem;
+            color: #888888;
+            margin-top: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .image-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            align-items: center;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 0 4rem;
+            box-sizing: border-box;
+            cursor: grab;
+        }
+        .image-modal:active {
+            cursor: grabbing;
+        }
+        .modal-long-img {
+            height: 75vh;
+            width: auto;
+            max-width: none;
+            display: block;
+        }
+        .modal-close-btn {
+            position: fixed;
+            top: 2rem;
+            right: 3rem;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 10000;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+        .modal-close-btn:hover {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .header-bar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                padding: 2rem 1.5rem;
+            }
+            .name-group { margin-bottom: 2rem; align-items: center; text-align: center; }
+            .nav-links { flex-direction: column; gap: 1.5rem; padding-bottom: 0; }
+            .nav-top-group { flex-direction: column; gap: 1.5rem; }
+            .content-wrapper { margin-left: 0; padding: 2rem 1.5rem; }
+        }
+    </style>
 </head>
 <body>
-    <div id="rain-background-container"></div> 
-    
-    <div id="main-sketch-container"></div>
 
-    <div class="portfolio-container">
+    <video autoplay loop muted playsinline class="bg-video">
+        <source src="background2.mp4" type="video/mp4">
+    </video>
+
+    <header class="header-bar">
+        <div class="name-group">
+            <a onclick="resetAndShowHome()" class="name-title">Ayue Wu</a>
+            <div class="name-sub">阿月·吴</div>
+            <div class="name-sub">Artist / Designer / Curator</div>
+        </div>
         
-        <section class="portfolio-row">
-            <h2 class="section-title">branding design</h2>
-            <div class="image-stream">
-                <a href="#" class="portfolio-item"><img src="https://via.placeholder.com/300x300/FF1493/FFFFFF?text=Brand+1" alt="branding design 1"></a>
-                <a href="#" class="portfolio-item"><img src="https://via.placeholder.com/300x300/FF1493/FFFFFF?text=Brand+2" alt="branding design 2"></a>
-                <a href="#" class="portfolio-item"><img src="https://via.placeholder.com/300x300/FF1493/FFFFFF?text=Brand+3" alt="branding design 3"></a>
-                <a href="#" class="portfolio-item"><img src="https://via.placeholder.com/300x300/FF1493/FFFFFF?text=Brand+4" alt="branding design 4"></a>
-                <a href="#" class="portfolio-item"><img src="https://via.placeholder.com/300x300/FF1493/FFFFFF?text=Brand+5" alt="branding design 5"></a>
-            </div>
-        </section>
+        <nav class="nav-links">
+            <div class="nav-top-group">
+                <div class="nav-item" id="nav-work">
+                    <a class="nav-link" onclick="openCategory('art')">WORK</a>
+                    <div class="sub-menu">
+                        <div class="sub-item-group" id="group-art">
+                            <a class="sub-link" id="link-cat-art" onclick="openCategory('art')">Art</a>
+                            <div class="sub-sub-menu" id="menu-art-projects"></div>
+                        </div>
 
-        <section class="portfolio-row">
-            <h2 class="section-title">party posters</h2>
-            <div class="image-stream">
-                <a href="#" class="portfolio-item"><img src="https://via.placeholder.com/300x400/1E90FF/FFFFFF?text=Poster+1" alt="party posters 1"></a>
-                <a href="#" class="portfolio-item"><img src="https://via.placeholder.com/300x400/1E90FF/FFFFFF?text=Poster+2" alt="party posters 2"></a>
-                <a href="#" class="portfolio-item"><img src="https://via.placeholder.com/300x400/1E90FF/FFFFFF?text=Poster+3" alt="party posters 3"></a>
-            </div>
-        </section>
-        
-        <section class="portfolio-row">
-            <h2 class="section-title">art project</h2>
-            <div class="image-stream">
-                 <a href="#" class="portfolio-item"><img src="https://via.placeholder.com/400x300/32CD32/FFFFFF?text=Art+1" alt="art project 1"></a>
-                 <a href="#" class="portfolio-item"><img src="https://via.placeholder.com/400x300/32CD32/FFFFFF?text=Art+2" alt="art project 2"></a>
-            </div>
-        </section>
+                        <div class="sub-item-group" id="group-design">
+                            <a class="sub-link" id="link-cat-design" onclick="openCategory('design')">Design</a>
+                            <div class="sub-sub-menu" id="menu-design-projects"></div>
+                        </div>
+                    </div>
+                </div>
 
-        <section class="portfolio-row">
-            <h2 class="section-title">techno club</h2>
-            <div class="image-stream">
-                 <a href="#" class="portfolio-item"><img src="https://via.placeholder.com/300x300/8A2BE2/FFFFFF?text=Techno+1" alt="techno club 1"></a>
-                 <a href="#" class="portfolio-item"><img src="https://via.placeholder.com/300x300/8A2BE2/FFFFFF?text=Techno+2" alt="techno club 2"></a>
+                <div class="nav-item" id="nav-about">
+                    <a class="nav-link" onclick="openBio()">ABOUT</a>
+                    <div class="sub-menu">
+                        <a onclick="openBio()" class="sub-link" id="link-bio">Biography</a>
+                        <a onclick="openExhibitions()" class="sub-link" id="link-exhibitions">Exhibitions</a>
+                        <a onclick="openCV()" class="sub-link" id="link-cv">CV</a>
+                    </div>
+                </div>
             </div>
-        </section>
 
-        <section class="portfolio-row">
-            <h2 class="section-title">photography</h2>
-            <div class="image-stream">
-                 <a href="#" class="portfolio-item"><img src="https://via.placeholder.com/450x300/FFD700/000000?text=Photo+1" alt="photography 1"></a>
-                 <a href="#" class="portfolio-item"><img src="https://via.placeholder.com/450x300/FFD700/000000?text=Photo+2" alt="photography 2"></a>
-                 <a href="#" class="portfolio-item"><img src="https://via.placeholder.com/450x300/FFD700/000000?text=Photo+3" alt="photography 3"></a>
+            <div class="nav-item">
+                <a class="nav-link" id="link-contact" onclick="openContact()">CONTACT</a>
             </div>
-        </section>
+        </nav>
+    </header>
 
+    <main class="content-wrapper">
+<div id="view-biography" style="display: none;">
+            <div class="bio-text">
+               Ayue Wu is an interdisciplinary artist based in Porto.
+
+Working across installation, moving image, sound, and print, her practice centers on everyday traces, spatial relationships, and the intersections between organic nature and algorithmic systems. In her sonic work, she weaves together traditional instruments, field recordings, and creative code into evolving auditory landscapes. Alongside sound, she uses photography, printed publications, and everyday objects to reflect on human agency within structured environments. Having founded and operated an independent underground music space for years, Wu grounds her work in a continuous engagement with public life and communal culture.
+            </div>
+
+            <div class="bio-video-container">
+                <iframe 
+                    src="https://player.vimeo.com/video/1234836495?title=0&byline=0&portrait=0&badge=0&autopause=0" 
+                    frameborder="0" 
+                    allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin" 
+                    allowfullscreen 
+                    title="ayue'Showreel">
+                </iframe>
+            </div>
+        </div>
+                    
+        <div id="view-cv" style="display: none;">
+            <div class="cv-container">
+                <div class="cv-section">
+                    <div class="cv-section-title">Education</div>
+                    <div class="cv-item">
+                        <div class="cv-item-header">
+                            <div class="cv-item-role">Master of Arts in New Media Art</div>
+                            <div class="cv-item-time">2025 - 2027</div>
+                        </div>
+                        <div class="cv-item-place">Universidade Católica Portuguesa, Portugal</div>
+                    </div>
+                    <div class="cv-item">
+                        <div class="cv-item-header">
+                            <div class="cv-item-role">Master of Arts in Visual Communication</div>
+                            <div class="cv-item-time">2019 - 2020</div>
+                        </div>
+                        <div class="cv-item-place">University for the Creative Arts, UK</div>
+                    </div>
+                    <div class="cv-item">
+                        <div class="cv-item-header">
+                            <div class="cv-item-role">Bachelor of Management in Marketing</div>
+                            <div class="cv-item-time">2013 - 2017</div>
+                        </div>
+                        <div class="cv-item-place">Suzhou University of Science and Technology, China</div>
+                    </div>
+                </div>
+
+                <div class="cv-section">
+                    <div class="cv-section-title">Professional Experience</div>
+                    <div class="cv-item">
+                        <div class="cv-item-header">
+                            <div class="cv-item-role">Founder / Creative Director</div>
+                            <div class="cv-item-time">2020 - 2024</div>
+                        </div>
+                        <div class="cv-item-place">Devenue Techno Club & Decafe Vinyl Shop</div>
+                        <div class="cv-item-desc">Directed the visual identity and daily operations of an independent cultural and music space. Curated over 200 events, managing everything from artist coordination and visual design to audiovisual technical setups and venue management.</div>
+                    </div>
+                    <div class="cv-item">
+                        <div class="cv-item-header">
+                            <div class="cv-item-role">Art Director / Branding Designer</div>
+                            <div class="cv-item-time">2020 - 2025</div>
+                        </div>
+                        <div class="cv-item-place">A&E Design Studio</div>
+                        <div class="cv-item-desc">Led comprehensive branding and visual identity projects for over 20 clients across diverse sectors, including cultural spaces and local businesses. Handled full-cycle project management from client communication to final creative production.</div>
+                    </div>
+                </div>
+
+                <div class="cv-section">
+                    <div class="cv-section-title">Selected Exhibitions & Events</div>
+                    <div class="cv-item">
+                        <div class="cv-item-desc">
+                            "Mycelium Opera", featured in the "one as part of a texture" exhibition at Branda, Porto (May 2026).
+                        </div>
+                    </div>
+                    <div class="cv-item">
+                        <div class="cv-item-desc">
+                            "Place or Placed" (Chair, Isolation belts, Sound speakers, Image), at Tianmuli Gallery, Hangzhou (2022).
+                        </div>
+                    </div>
+                    <div class="cv-item">
+                        <div class="cv-item-desc">
+                            "The Place" (Chairs, Sound Speakers, Zine), featured in the "Native Soundscape: The Sonic Geography of Suzhou" exhibition at Hanshan Art Museum (2021).
+                        </div>
+                    </div>
+                    <div class="cv-item">
+                        <div class="cv-item-header">
+                            <div class="cv-item-role">Curator & Organizer</div>
+                            <div class="cv-item-time">2022 - 2024</div>
+                        </div>
+                        <div class="cv-item-desc">Conceptualized and executed large-scale cultural events including the "24-Hour Nonstop Marathon Music Party" and the continuous "100 Weeks Party Collection" series.</div>
+                    </div>
+                </div>
+
+                <div class="cv-section">
+                    <div class="cv-section-title">Technical Skills & Languages</div>
+                    <div class="cv-skills-grid">
+                        <div class="cv-skills-row"><span>Design & Media:</span> Photoshop, Illustrator, InDesign, Lightroom, Figma, Office.</div>
+                        <div class="cv-skills-row"><span>Audiovisual & Tech:</span> Creative Coding, Sound Design, Rekordbox, Pioneer XDJ.</div>
+                        <div class="cv-skills-row"><span>Languages:</span> English (Fluent), Chinese (Native), Portuguese (Still learning).</div>
+                    </div>
+                </div>
+                <div style="margin-top: 2rem; margin-bottom: 4rem;">
+                    <a href="Ayue_Wu_CV.pdf" download="Ayue_Wu_CV.pdf" class="cv-download-btn">DOWNLOAD CV (PDF)</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-exhibitions" style="display: none;">
+            <div class="exhibition-container" id="exhibition-list-content"></div>
+        </div>
+
+        <div id="view-works-list" style="display: none;"></div>
+
+        <div id="view-project-detail" style="display: none;">
+            <div id="project-detail-content"></div>
+        </div>
+
+        <div id="view-contact" style="display: none;">
+            <div class="contact-container">
+                <div class="contact-list">
+                    <div class="contact-item">
+                        <span class="contact-label">Email</span>
+                        <a href="mailto:your.email@example.com" class="contact-value">ayuewu@outlook.com</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="image-modal" class="image-modal" onclick="closeModal(event)">
+        <span class="modal-close-btn" onclick="closeModalDirect()">&times;</span>
+        <img id="modal-img" class="modal-long-img" src="" alt="Long view">
     </div>
+
+    <script>
+        const artProjects = [
+            {
+                id: 'art-1',
+                title: 'MYCELIUM OPERA',
+                year: '2026',
+                category: 'Generative Art',
+                previewImages: ['mo2.jpg', 'mo1.png'],
+                description: 'Microphone, Generative audio and visual system<br><br>"Mycelium Opera" is an interactive installation exploring the connection between humans, computers, and virtual nature. The work uses digital mycelium to build a decentralized ecosystem. Its growth is driven by organic algorithms and real-time environmental sounds. As the system scans images to create food nodes, mycelium particles spread. A microphone captures ambient noise, causing the digital mycelium to burst, grow, or decay based on sound fluctuations. The system then translates this dynamic growth data into real-time audio signals. By turning the growth process into a responsive sonic landscape, the installation merges visual, auditory, and environmental elements. The work transforms the physical space into a shared network where digital life interacts with the audience.',
+                videoEmbed: '<div class="video-dual-grid"><div class="video-box-item"><iframe src="https://player.vimeo.com/video/1232842310?title=0&byline=0&portrait=0&badge=0&autopause=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="myCELIUM NOTE"></iframe></div><div class="video-box-item"><iframe src="https://player.vimeo.com/video/1232843797?title=0&byline=0&portrait=0&badge=0&autopause=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="myCELIUM SONG"></iframe></div></div>',
+                detailImages: [],
+                gifImages: [
+                    'gif/1.GIF',
+                    'gif/10.GIF',
+                    'gif/2.GIF',
+                    'gif/3.GIF',
+                    'gif/11.GIF',
+                    'gif/4.GIF',
+                    'gif/5.GIF',
+                    'gif/6.GIF',
+                    'gif/20.GIF',
+                    'gif/18.GIF',
+                    'gif/7.GIF',
+                    'gif/9.GIF',
+                    'gif/8.GIF',
+                    'gif/12.GIF',
+                    'gif/13.GIF',
+                    'gif/14.GIF',
+                    'gif/15.GIF',
+                    'gif/16.GIF',
+                    'gif/17.GIF',
+                    'gif/19.GIF'
+                ]
+            },
+            {
+                id: 'art-2',
+                title: 'LANTERN FRUIT',
+                year: '2026',
+                category: 'Moving Image',
+                previewImages: ['f1.jpg', 'f2.jpg'],
+                description: 'Soft aluminum wire, masking tape, fire, scorched aluminum frame, single-channel video<br><br>During my rural residency, I observed the process of physalis fruit transforming from plumpness into an empty husk. In nature, tiny fungi slowly digest the pulp and skin, leaving behind only screen-like mesh fibers—a slow decay that simultaneously nourishes new life.<br> Using soft aluminum wire and translucent tape, I recreated this fragile pod and attempted to simulate its disappearance through fire. Unlike the moist, slow "cold combustion" found in nature (biological degradation and metabolism), the flame instantly consumed the tape, leaving behind a scorched and warped metal skeleton. This was not only a visual experiment in rapid disappearance, but also revealed the disconnect between artificial materials and natural cycles. The surviving skeleton is now kept as a starting point for upcoming encounters with water, soil, and time.',
+                videoEmbed: '<div style="padding:56.25% 0 0 0;position:relative;max-width:800px;margin:2.5rem 0 3rem 0;"><iframe src="https://player.vimeo.com/video/1232768582?title=0&byline=0&portrait=0&badge=0&autopause=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="Lantern Fruit"></iframe></div>',
+                detailImages: ['f2.jpg']
+            },
+            {
+                id: 'art-3',
+                title: 'UNANCHORED CAPTIONS',
+                year: '2025',
+                category: 'Photobook',
+                previewImages: ['uc1.jpg'],
+                description: '6m x 0.2m Collage Zine<br> <br>"Unanchored Captions" is a 6-meter-long photobook installation. The work pairs Wang Fuchun’s train photographs with predictive text from mobile keyboards across five languages. Through a blind montage process, images and words are matched randomly without editorial control. The sterile words suggested by algorithms sharply contrast with the lively human moments in the photos. By breaking the traditional link between image and caption, the installation refuses to be fully understood. It highlights the gap between algorithmic logic and real life, protecting the subjects from being easily defined.',
+                detailImages: ['uc1.jpg', 'uc2.png']
+            },
+            {
+                id: 'art-4',
+                title: 'THE PLACE',
+                year: '2021',
+                category: 'Installation',
+                previewImages: ['tp5.png'],
+                description: 'Chairs, Bench, Sound speakers, Zine<br><br>"Place" usually refers to a geographical position, point or area. In humanistic understanding, it could be the smallest unit of human occupation in a current space. Ayue, who loves street photography, is enlightened by the notion. It comes to her attention that a street soundscape is never created by passersby, but by people sitting on the street with various forms of chairs. They declare their sovereignty in a leisurely manner simply with chairs and observe the others walking by. A seat is now considered to be a “place” and it voices for its context. The installation simply restores chair as the "smallest unit” of “place” and sounds recorded around seats from various locations are now in dialogue among chairs on site.',
+                detailImages: ['tp2.JPG', 'tp4.JPG', 'tp6.png', 'tp5.png', 'tp7.png'],
+                scatterImages: Array.from({ length: 45 }, (_, i) => `the place/${i + 1}.JPG`)
+            }
+        ];
+
+        const exhibitionsData = [
+            {
+                image: 'exhibition/e1.JPG',
+                title: 'one as part of a texture',
+                year: '2026',
+                description: 'Group exhibition at Branda, Porto. Presenting "Mycelium Opera", an interactive audiovisual ecosystem driven by real-time ambient acoustics and computational mycelium growth.'
+            },
+            {
+                image: 'exhibition/e2.JPG',
+                title: 'Place or Placed',
+                year: '2022',
+                description: 'Exhibition at Tianmuli Gallery, Hangzhou. The installation investigates spatial boundaries and physical ownership using chairs, isolation belts, sound speakers, and visual projections.'
+            },
+            {
+                image: 'exhibition/e3.JPG',
+                title: 'Native Soundscape: The Sonic Geography of Suzhou',
+                year: '2021',
+                description: 'Featured at Hanshan Art Museum. The work "The Place" uses chairs and localized sound field recordings to capture the vernacular acoustic memories and street life sovereignty.'
+            }
+        ];
+
+        const posterImageList = [];
+        for (let i = 1; i <= 30; i++) {
+            posterImageList.push(`space-visual/P${i}.jpg`);
+        }
+
+        const goodsImageList = [];
+        for (let i = 1; i <= 10; i++) {
+            goodsImageList.push(`space-visual/z${i}.jpg`);
+        }
+
+        const eventImageList = [];
+        for (let i = 1; i <= 22; i++) {
+            eventImageList.push(`space-event/event/e${i}.jpg`);
+        }
+
+        const spaceImageList = [];
+        for (let i = 1; i <= 16; i++) {
+            spaceImageList.push(`space-event/space/s${i}.jpg`);
+        }
+
+        const deVenueEventsData = [
+            {
+                title: 'CURATION',
+                year: '2020–2024',
+                category: 'Lineups, Residencies & Live Acts',
+                description: 'Curated over 200 electronic music events, underground label showcases, and international artist bookings at Devenue Techno Club.',
+                images: eventImageList
+            },
+            {
+                title: 'DIRECTING',
+                year: '2020–2024',
+                category: 'Venue Management & Nightlife Scenography',
+                description: 'Directing venue atmosphere, custom sound booth ergonomics, spatial lighting systems, and subcultural community operations.',
+                images: spaceImageList
+            }
+        ];
+
+        const deVenuePrintsData = [
+            {
+                title: 'SELECTED POSTERS',
+                year: '2020–2024',
+                category: '30 Selected Event Visuals & Flyers',
+                description: 'A curated visual archive of 30 party posters designed for club nights, exploring typographic hierarchy and high-contrast layout.',
+                images: posterImageList
+            },
+            {
+                title: 'BOOKS & PRODUCTS',
+                year: '2020–2024',
+                category: 'Vinyl, Merch & Printed Collateral',
+                description: 'Physical artifacts produced for the space and vinyl releases, including merchandise, stickers, wristbands, and printed booklets.',
+                images: goodsImageList
+            }
+        ];
+
+        const aeBrandingCases = [
+            {
+                title: 'LE VILLAGE',
+                year: '2023-2024',
+                category: 'Branding Design / Graphic Design',
+                description: 'Le village is a young community brand from Taiwan, now rooted in Suzhou. It brings together foodies, artists, and creators from around the world, forming a modern tribe that values connection and vitality. The name “Le village" combines French and Chinese, with "Le" echoing the Chinese word for "joy" (乐), symbolizing simple, pure happiness.<br><br>In the design, we playfully split "vill" and "age," creating a minimalist yet charming typographic pattern. This reflects the brand\'s blend of cultural elegance and modern creativity, offering a warm and inspiring space for everyone to find belonging and joy.',
+                images: Array.from({ length: 8 }, (_, i) => `branding/1/${i + 1}.jpg`)
+            },
+            {
+                title: 'THE BREATHABLE TRIANGLE',
+                year: '2023',
+                category: 'Branding Design',
+                description: '“The Breathable Triangle" is a unique triangular building located in a national wetland park, serving as the largest reading and lecture space in the area. The name "breathing" draws inspiration from the park\'s fresh air and natural vitality, symbolizing the harmony between architecture and nature.<br><br>In the brand design, we used interconnected circles to represent the dynamic rhythm of breathing. One circle cleverly replaces the "口" (mouth) radical in the Chinese character "呼" (breathe), blending text and graphics seamlessly. This design captures the space\'s liveliness and cultural essence.<br><br>Through the fusion of typography and imagery, "The Breathable Triangle" becomes a vibrant cultural hub, celebrating the connection between nature and humanity while offering visitors an inspiring experience.',
+                images: Array.from({ length: 8 }, (_, i) => `branding/2/${i + 1}.jpg`)
+            },
+            {
+                title: 'LANYIN / ORCHID',
+                year: '2022',
+                category: 'Branding Design / Package Design / Graphic Design',
+                description: 'Lanyin, inspired by the phrase "orchid\'s cause and willow\'s effect," is a Chinese fragrance brand from Shanghai. The design integrates Chinese calligraphy with modern typography, reimagining characters through bold, intricate arrangements. The English typeface echoes the rhythm of Chinese poetry, creating a poetic visual aesthetic.<br><br>Using a black-and-white theme, the design exudes simplicity and sophistication. We focused on crafting packaging for fragrances and related products, blending calligraphic artistry with the serene essence of scents. Lanyin merges traditional culture with contemporary design, offering a sensory and poetic connection to life through fragrance.',
+                images: Array.from({ length: 9 }, (_, i) => `branding/3/${i + 1}.jpg`)
+            },
+            {
+                title: 'TONGXIAOLI CAFE',
+                year: '2022',
+                category: 'Branding Design / Package / Graphic Design',
+                description: 'TongxiaoLi is the exclusive café of Tongli National Wetland Park. The name cleverly combines "鲤" (carp) with "里" (hometown), excitingly creating a lively carp image that symbolizes vitality. In the brand design, we customized the Chinese character "鲤" to evoke a visual contrast between positive and negative ions, subtly reflecting the high negative ion content in the wetland park\'s air—a nod to its scientific significance.<br><br>The vibrant blue color palette represents the park\'s clear waters and natural ecosystem, infusing the brand with a fresh and energetic vibe. Through these design elements, Tongxiao Li not only integrates into the wetland park but also conveys the harmony of nature and science, offering customers a unique and exploratory experience.',
+                images: Array.from({ length: 8 }, (_, i) => `branding/4/${i + 1}.jpg`)
+            },
+            {
+                title: 'YOGIN PILATES',
+                year: '2021',
+                category: 'Branding Design / Package / Graphic Design',
+                description: 'Yogin Pilates is a leading local Pilates studio. With its growing presence, we have crafted a brand upgrade that balances its established identity with a more international and distinctive image.<br><br>Blue, the primary color, symbolizes tranquility and depth, aligning with Pilates\' pursuit of harmony. Classic geometric shapes reflect the unity of body, mind, and spirit, conveying the brand’s commitment to holistic wellness.<br><br>Through this transformation, Yogin Pilates continues to lead the way in Pilates innovation, offering exceptional experiences for those seeking health and balance.',
+                images: Array.from({ length: 7 }, (_, i) => `branding/5/${i + 1}.JPG`)
+            },
+            {
+                title: 'EPOK CAFE',
+                year: '2021',
+                category: 'Branding Design / Package Design',
+                description: 'Epok Cafe is a long-standing community coffee shop deeply rooted in Suzhou. In its brand upgrade, we crafted a more approachable Chinese identity and a sleek English logo. The redesigned "epoque" is now easier to recognize and remember, creating a distinct visual and phonetic identity.<br><br>The bold red and black color scheme complements Suzhou’s historic charm while highlighting a modern, minimalist design. This balance allows the brand to blend into its surroundings while standing out.<br><br>Through this rebranding, Epok Cafe retains its community roots while offering a fresh and memorable experience.',
+                images: Array.from({ length: 8 }, (_, i) => `branding/6/${i + 1}.jpg`)
+            }
+        ];
+
+        const graphicImageList = [
+            'branding/others/5.JPG',
+            'branding/others/6.JPG',
+            'branding/others/7.JPG',
+            'branding/others/8.JPG',
+            'branding/others/24.JPG',
+            'branding/others/10.JPG',
+            'branding/others/15.JPG',
+            'branding/others/16.JPG',
+            'branding/others/4.JPG'
+        ];
+
+        const aeGraphicData = [
+            {
+                title: 'SELECTED GRAPHICS',
+                year: '2020–2025',
+                category: 'Print Materials',
+                description: 'A curated visual index of book layouts, posters, typography research, and printed collateral developed at A&E Design Studio.',
+                images: graphicImageList
+            }
+        ];
+
+        const designNavEntries = [
+            { id: 'design-devenue', title: 'DEVENUE CLUB' },
+            { id: 'design-studio', title: 'A&E DESIGN STUDIO' }
+        ];
+
+        function initSidebar() {
+            const artMenu = document.getElementById('menu-art-projects');
+            const designMenu = document.getElementById('menu-design-projects');
+            
+            artMenu.innerHTML = '';
+            designMenu.innerHTML = '';
+
+            artProjects.forEach(p => {
+                artMenu.insertAdjacentHTML('beforeend', `<a class="sub-sub-link project-link" id="link-${p.id}" onclick="openProjectDetail('${p.id}', 'art')">${p.title}</a>`);
+            });
+
+            designNavEntries.forEach(d => {
+                designMenu.insertAdjacentHTML('beforeend', `<a class="sub-sub-link project-link" id="link-${d.id}" onclick="openDesignEntity('${d.id}')">${d.title}</a>`);
+            });
+        }
+        initSidebar();
+
+        function clearAllLocks() {
+            document.querySelectorAll('.locked').forEach(el => el.classList.remove('locked'));
+        }
+
+        function clearSidebarHighlight() {
+            document.querySelectorAll('.project-link').forEach(el => el.classList.remove('highlight'));
+            document.querySelectorAll('.sub-link').forEach(el => el.classList.remove('highlight'));
+            const contactLink = document.getElementById('link-contact');
+            if (contactLink) contactLink.classList.remove('highlight');
+        }
+
+        function hideAllViews() {
+            const views = ['view-biography', 'view-works-list', 'view-project-detail', 'view-cv', 'view-contact', 'view-exhibitions'];
+            views.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
+        }
+
+        function resetAndShowHome() {
+            clearAllLocks();
+            clearSidebarHighlight();
+            hideAllViews();
+            window.scrollTo(0, 0);
+        }
+
+        function openBio() {
+            clearAllLocks();
+            document.getElementById('nav-about').classList.add('locked');
+            clearSidebarHighlight();
+            const bioLink = document.getElementById('link-bio');
+            if (bioLink) bioLink.classList.add('highlight');
+
+            hideAllViews();
+            document.getElementById('view-biography').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function openCV() {
+            clearAllLocks();
+            document.getElementById('nav-about').classList.add('locked');
+            clearSidebarHighlight();
+            const cvLink = document.getElementById('link-cv');
+            if (cvLink) cvLink.classList.add('highlight');
+
+            hideAllViews();
+            document.getElementById('view-cv').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function openExhibitions() {
+            clearAllLocks();
+            document.getElementById('nav-about').classList.add('locked');
+            clearSidebarHighlight();
+            const exhLink = document.getElementById('link-exhibitions');
+            if (exhLink) exhLink.classList.add('highlight');
+
+            hideAllViews();
+            const exhContainer = document.getElementById('exhibition-list-content');
+            exhContainer.innerHTML = '';
+
+            exhibitionsData.forEach(item => {
+                exhContainer.insertAdjacentHTML('beforeend', `
+                    <div class="exhibition-item">
+                        <img class="exhibition-img" src="${item.image}" alt="${item.title}" onclick="openModal('${item.image}')">
+                        <div class="exhibition-info">
+                            <div class="exhibition-title-row">
+                                <div class="exhibition-title">${item.title}</div>
+                                <div class="exhibition-year">${item.year}</div>
+                            </div>
+                            <div class="exhibition-desc">${item.description}</div>
+                        </div>
+                    </div>
+                `);
+            });
+
+            document.getElementById('view-exhibitions').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function openContact() {
+            clearAllLocks();
+            clearSidebarHighlight();
+            const contactLink = document.getElementById('link-contact');
+            if (contactLink) contactLink.classList.add('highlight');
+
+            hideAllViews();
+            document.getElementById('view-contact').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function openCategory(category) {
+            clearAllLocks();
+            document.getElementById('nav-work').classList.add('locked');
+            document.getElementById(`group-${category}`).classList.add('locked');
+            clearSidebarHighlight();
+
+            // 当前大类高亮 (Art 或 Design)
+            const catLink = document.getElementById(`link-cat-${category}`);
+            if (catLink) catLink.classList.add('highlight');
+
+            hideAllViews();
+            document.getElementById('view-works-list').style.display = 'block';
+            window.scrollTo(0, 0);
+
+            if (category === 'art') {
+                renderWorksList(artProjects, 'art');
+            } else {
+                renderDesignHome();
+            }
+        }
+
+        function renderDesignHome() {
+            const listContainer = document.getElementById('view-works-list');
+            listContainer.innerHTML = '';
+
+            const selectedDevEvents = [
+                'space-event/space/s1.jpg',
+                'space-event/event/e1.jpg',
+                'space-event/space/s3.jpg',
+                'space-event/space/s6.jpg',
+                'space-event/space/s7.jpg',
+                'space-event/event/e5.jpg',
+                'space-event/space/s8.jpg',
+                'space-event/space/s9.jpg',
+                'space-event/event/e9.jpg',
+                'space-event/event/e8.jpg'
+            ];
+
+            const selectedDevPrints = [
+                'space-visual/P1.jpg',
+                'space-visual/P2.jpg',
+                'space-visual/P3.jpg',
+                'space-visual/P4.jpg',
+                'space-visual/P5.jpg',
+                'space-visual/P6.jpg',
+                'space-visual/P7.jpg',
+                'space-visual/P8.jpg',
+                'space-visual/P9.jpg',
+                'space-visual/P10.jpg'
+            ];
+
+            const selectedAeBrand = aeBrandingCases.map(c => c.images[0]);
+            const selectedAeGraphic = aeGraphicData[0].images.slice(0, 10);
+
+            const devEventHtml = selectedDevEvents.map(img => `<img class="preview-scroll-img" src="${img}">`).join('');
+            const devPrintHtml = selectedDevPrints.map(img => `<img class="preview-scroll-img" src="${img}">`).join('');
+            const aeBrandHtml = selectedAeBrand.map(img => `<img class="preview-scroll-img" src="${img}">`).join('');
+            const aeGraphicHtml = selectedAeGraphic.map(img => `<img class="preview-scroll-img" src="${img}">`).join('');
+
+            listContainer.insertAdjacentHTML('beforeend', `
+                <div class="design-entity-item" id="entity-design-devenue">
+                    <div class="project-list-header">
+                        <div class="project-list-title">DEVENUE CLUB</div>
+                        <div class="project-list-year">2020–2024 · Space Practice</div>
+                    </div>
+                    <div class="detail-content" style="margin-bottom: 2.5rem;">
+                        Devenue is an independent underground club and vinyl listening space operated from 2020 to 2024. As founder and creative director, Ayue directed the spatial identity, weekly audio-visual environments, and over 200 underground events.
+                    </div>
+
+                    <div class="entity-sub-section">
+                        <div class="entity-sub-title">EVENTS</div>
+                        <div class="preview-scroll-track">${devEventHtml}</div>
+                        <a class="archive-expand-btn" onclick="openDetailView('devenue-events')"><span class="plus-sign">+</span> MORE</a>
+                    </div>
+
+                    <div class="entity-sub-section" style="margin-top: 3.5rem;">
+                        <div class="entity-sub-title">PRINTS</div>
+                        <div class="preview-scroll-track">${devPrintHtml}</div>
+                        <a class="archive-expand-btn" onclick="openDetailView('devenue-prints')"><span class="plus-sign">+</span> MORE</a>
+                    </div>
+                </div>
+
+                <div class="design-entity-item" id="entity-design-studio" style="margin-top: 8rem;">
+                    <div class="project-list-header">
+                        <div class="project-list-title">A&E DESIGN STUDIO</div>
+                        <div class="project-list-year">2020–2025 · Studio Practice</div>
+                    </div>
+                    <div class="detail-content" style="margin-bottom: 2.5rem;">
+                        A multidisciplinary visual practice founded by Ayue, delivering comprehensive branding, editorial publications, and spatial graphic systems for over 20 cultural institutions and commercial clients.
+                    </div>
+
+                    <div class="entity-sub-section">
+                        <div class="entity-sub-title">BRANDING</div>
+                        <div class="preview-scroll-track">${aeBrandHtml}</div>
+                        <a class="archive-expand-btn" onclick="openDetailView('ae-branding')"><span class="plus-sign">+</span> MORE</a>
+                    </div>
+
+                    <div class="entity-sub-section" style="margin-top: 3.5rem;">
+                        <div class="entity-sub-title">GRAPHIC</div>
+                        <div class="preview-scroll-track">${aeGraphicHtml}</div>
+                        <a class="archive-expand-btn" onclick="openDetailView('ae-graphic')"><span class="plus-sign">+</span> MORE</a>
+                    </div>
+                </div>
+            `);
+        }
+
+        function openDesignEntity(entityId) {
+            openCategory('design');
+            const target = document.getElementById(`entity-${entityId}`);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            const activeLink = document.getElementById(`link-${entityId}`);
+            if (activeLink) activeLink.classList.add('highlight');
+        }
+
+        function openDetailView(type) {
+            clearAllLocks();
+            document.getElementById('nav-work').classList.add('locked');
+            document.getElementById('group-design').classList.add('locked');
+            clearSidebarHighlight();
+
+            const catLink = document.getElementById('link-cat-design');
+            if (catLink) catLink.classList.add('highlight');
+
+            hideAllViews();
+            document.getElementById('view-works-list').style.display = 'block';
+            window.scrollTo(0, 0);
+
+            if (type === 'devenue-events') {
+                renderMultiArchivePage('DEVENUE / EVENTS', '2020–2024 · Curation & Operation Archive', deVenueEventsData);
+            } else if (type === 'devenue-prints') {
+                renderMultiArchivePage('DEVENUE / PRINTS', '2020–2024 · 30 Posters & Merch Archive', deVenuePrintsData);
+            } else if (type === 'ae-branding') {
+                renderBrandingCasesPage();
+            } else if (type === 'ae-graphic') {
+                renderMultiArchivePage('A&E STUDIO / GRAPHICS', '2020–2026 · Print Materials', aeGraphicData);
+            }
+        }
+
+        function renderMultiArchivePage(pageTitle, pageMeta, dataArray) {
+            const listContainer = document.getElementById('view-works-list');
+            listContainer.innerHTML = `
+                <div style="margin-bottom: 4rem;">
+                    <a onclick="openCategory('design')" class="archive-expand-btn" style="margin-bottom: 2rem; display: inline-block;">← BACK TO DESIGN</a>
+                    <div class="detail-title">${pageTitle}</div>
+                    <div class="detail-meta">${pageMeta}</div>
+                </div>
+            `;
+
+            const isGraphicPage = pageTitle.includes('GRAPHIC');
+
+            dataArray.forEach((item, index) => {
+                const total = item.images.length;
+                const initialLimit = isGraphicPage ? total : 10;
+                const hasMore = total > initialLimit;
+
+                let imagesHtml = '';
+                item.images.forEach((imgUrl, i) => {
+                    const isHiddenStyle = (hasMore && i >= initialLimit) ? 'display: none;' : '';
+                    imagesHtml += `<img class="project-image-box" src="${imgUrl}" alt="${item.title}" style="${isHiddenStyle}" onclick="openModal('${imgUrl}')">`;
+                });
+
+                let buttonHtml = '';
+                if (hasMore) {
+                    buttonHtml = `
+                        <div style="display: flex; gap: 2rem; align-items: center; margin-top: 1.5rem;">
+                            <button class="archive-expand-btn" id="btn-expand-${index}" onclick="expandArchiveImages(${index})"><span class="plus-sign">+</span> MORE</button>
+                            <button class="archive-expand-btn" id="btn-collapse-${index}" onclick="collapseArchiveImages(${index})" style="display: none;"><span class="plus-sign">-</span> LESS</button>
+                        </div>
+                    `;
+                }
+
+                listContainer.insertAdjacentHTML('beforeend', `
+                    <div class="space-archive-item">
+                        <div class="project-list-header">
+                            <div class="project-list-title">${item.title}</div>
+                            <div class="project-list-year">${item.year} · ${item.category}</div>
+                        </div>
+                        <div class="detail-content" style="margin-bottom: 2rem;">${item.description}</div>
+                        <div class="archive-grid-5cols" id="grid-space-${index}">
+                            ${imagesHtml}
+                        </div>
+                        ${buttonHtml}
+                    </div>
+                `);
+            });
+        }
+
+        function renderBrandingCasesPage() {
+            const listContainer = document.getElementById('view-works-list');
+            listContainer.innerHTML = `
+                <div style="margin-bottom: 4rem;">
+                    <a onclick="openCategory('design')" class="archive-expand-btn" style="margin-bottom: 2rem; display: inline-block;">← BACK TO DESIGN</a>
+                    <div class="detail-title">A&E DESIGN STUDIO / BRAND IDENTITY</div>
+                    <div class="detail-meta">2020–2025 · 6 Selected Commercial & Cultural Cases</div>
+                </div>
+            `;
+
+            aeBrandingCases.forEach(c => {
+                let imgsHtml = '';
+                c.images.forEach(img => {
+                    imgsHtml += `<img class="preview-scroll-img" src="${img}" alt="${c.title}" onclick="openModal('${img}')">`;
+                });
+
+                listContainer.insertAdjacentHTML('beforeend', `
+                    <div class="space-archive-item" style="margin-bottom: 6rem;">
+                        <div class="project-list-header">
+                            <div class="project-list-title">${c.title}</div>
+                            <div class="project-list-year">${c.year} · ${c.category}</div>
+                        </div>
+                        <div class="detail-content" style="margin-bottom: 2rem;">${c.description}</div>
+                        <div class="preview-scroll-track">
+                            ${imgsHtml}
+                        </div>
+                    </div>
+                `);
+            });
+        }
+
+        function expandArchiveImages(itemIndex) {
+            const grid = document.getElementById(`grid-space-${itemIndex}`);
+            if (!grid) return;
+
+            const allImages = grid.querySelectorAll('.project-image-box');
+            let newlyShown = 0;
+            const batchSize = 10;
+
+            for (let i = 0; i < allImages.length; i++) {
+                if (allImages[i].style.display === 'none') {
+                    allImages[i].style.display = 'block';
+                    newlyShown++;
+                    if (newlyShown >= batchSize) break;
+                }
+            }
+
+            const collapseBtn = document.getElementById(`btn-collapse-${itemIndex}`);
+            if (collapseBtn) collapseBtn.style.display = 'inline-flex';
+
+            let stillHidden = 0;
+            allImages.forEach(img => {
+                if (img.style.display === 'none') stillHidden++;
+            });
+
+            const expandBtn = document.getElementById(`btn-expand-${itemIndex}`);
+            if (stillHidden === 0 && expandBtn) {
+                expandBtn.style.display = 'none';
+            }
+        }
+
+        function collapseArchiveImages(itemIndex) {
+            const grid = document.getElementById(`grid-space-${itemIndex}`);
+            if (!grid) return;
+
+            const allImages = grid.querySelectorAll('.project-image-box');
+            allImages.forEach((img, i) => {
+                if (i >= 10) img.style.display = 'none';
+            });
+
+            const collapseBtn = document.getElementById(`btn-collapse-${itemIndex}`);
+            if (collapseBtn) collapseBtn.style.display = 'none';
+
+            const expandBtn = document.getElementById(`btn-expand-${itemIndex}`);
+            if (expandBtn) expandBtn.style.display = 'inline-flex';
+
+            const parentBlock = grid.closest('.space-archive-item');
+            if (parentBlock) {
+                parentBlock.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function renderWorksList(dataArray, categoryName) {
+            const listContainer = document.getElementById('view-works-list');
+            listContainer.innerHTML = ''; 
+            
+            dataArray.forEach(project => {
+                let imagesHtml = '';
+                project.previewImages.forEach(img => {
+                    imagesHtml += `<img class="project-image-box" src="${img}" alt="Preview Image">`;
+                });
+                listContainer.insertAdjacentHTML('beforeend', `
+                    <div class="project-list-item" onclick="openProjectDetail('${project.id}', '${categoryName}')">
+                        <div class="project-list-header">
+                            <div class="project-list-title">${project.title}</div>
+                            <div class="project-list-year">${project.year} · ${project.category}</div>
+                        </div>
+                        <div class="project-list-images">
+                            ${imagesHtml}
+                        </div>
+                    </div>
+                `);
+            });
+        }
+
+        function openProjectDetail(projectId, category) {
+            clearAllLocks();
+            document.getElementById('nav-work').classList.add('locked');
+            document.getElementById(`group-${category}`).classList.add('locked');
+            
+            hideAllViews();
+            document.getElementById('view-project-detail').style.display = 'block';
+            window.scrollTo(0, 0);
+
+            clearSidebarHighlight();
+            const activeLink = document.getElementById(`link-${projectId}`);
+            if (activeLink) activeLink.classList.add('highlight');
+
+            // 同时高亮对应的大分类
+            const catLink = document.getElementById(`link-cat-${category}`);
+            if (catLink) catLink.classList.add('highlight');
+
+            const targetProject = artProjects.find(p => p.id === projectId);
+            if (!targetProject) return;
+
+            const videoHtml = targetProject.videoEmbed || '';
+
+            let scatterHtml = '';
+            if (targetProject.id === 'art-4' && targetProject.scatterImages) {
+                scatterHtml = `
+                    <div class="scatter-canvas-container">
+                        <div class="scatter-canvas-header">
+                            <div class="scatter-canvas-title">45 Field Photographs / Interactive Lightbox</div>
+                            <button class="scatter-shuffle-btn" onclick="shufflePlacePhotos()">↻ SHUFFLE</button>
+                        </div>
+                        <div class="scatter-canvas" id="the-place-scatter-canvas"></div>
+                    </div>
+                `;
+            }
+
+            let gifTrackHtml = '';
+            if (targetProject.id === 'art-1' && targetProject.gifImages) {
+                const track1Images = targetProject.gifImages.slice(0, 10);
+                const track2Images = targetProject.gifImages.slice(10, 20);
+
+                const t1 = track1Images.map((src, i) => `<img class="gif-track-item" src="${src}" alt="GIF ${i+1}" onclick="openModal('${src}')">`).join('');
+                const t2 = track2Images.map((src, i) => `<img class="gif-track-item" src="${src}" alt="GIF ${i+11}" onclick="openModal('${src}')">`).join('');
+
+                gifTrackHtml = `
+                    <div class="gif-two-tracks-container">
+                        <div class="detail-content" style="font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; color: #888888; margin-bottom: 0.5rem;">Generative Process / 20 GIFs Archive (Scroll Horizontally)</div>
+                        <div class="gif-single-track">${t1}</div>
+                        <div class="gif-single-track">${t2}</div>
+                    </div>
+                `;
+            }
+
+            let detailImagesHtml = '';
+            if (targetProject.id === 'art-4') {
+                const twoImages = targetProject.detailImages.slice(0, 2);
+                const remainingImages = targetProject.detailImages.slice(2);
+
+                const twoHtml = twoImages.map(img => `<img src="${img}" class="detail-big-image" onclick="openModal('${img}')">`).join('');
+                const remHtml = remainingImages.map(img => `<img src="${img}" class="detail-big-image" onclick="openModal('${img}')">`).join('');
+
+                detailImagesHtml = `
+                    <div class="the-place-two-grid">${twoHtml}</div>
+                    <div>${remHtml}</div>
+                `;
+            } else {
+                detailImagesHtml = targetProject.detailImages.map(imgUrl => {
+                    if (imgUrl.includes('uc2.png')) {
+                        return `
+                            <div class="long-thumb-box" onclick="openModal('${imgUrl}')">
+                                <img src="${imgUrl}" class="long-thumb-img" alt="Artwork">
+                                <div class="long-thumb-tip">CLICK TO VIEW FULL PANORAMA (SCROLL HORIZONTALLY)</div>
+                            </div>
+                        `;
+                    }
+                    return `<img src="${imgUrl}" class="detail-big-image" onclick="openModal('${imgUrl}')">`;
+                }).join('');
+            }
+
+            document.getElementById('project-detail-content').innerHTML = `
+                <div class="detail-title">${targetProject.title}</div>
+                <div class="detail-meta">${targetProject.year} — ${targetProject.category}</div>
+                <div class="detail-content">${targetProject.description}</div>
+                ${videoHtml}
+                ${scatterHtml}
+                ${detailImagesHtml}
+                ${gifTrackHtml}
+            `;
+
+            if (targetProject.id === 'art-4') {
+                setTimeout(shufflePlacePhotos, 50);
+            }
+        }
+
+        let topZIndexCounter = 100;
+        function shufflePlacePhotos() {
+            const canvas = document.getElementById('the-place-scatter-canvas');
+            if (!canvas) return;
+
+            const targetProject = artProjects.find(p => p.id === 'art-4');
+            if (!targetProject || !targetProject.scatterImages) return;
+
+            canvas.innerHTML = '';
+            const images = targetProject.scatterImages;
+
+            images.forEach((src, index) => {
+                const img = document.createElement('img');
+                img.className = 'scatter-photo-item';
+                img.src = src;
+                img.alt = `The Place ${index + 1}`;
+
+                const leftPercent = Math.random() * 70 + 5;
+                const topPercent = Math.random() * 65 + 5;
+                const rotDeg = (Math.random() * 36) - 18;
+                const zIndex = Math.floor(Math.random() * 45) + 1;
+
+                img.style.left = `${leftPercent}%`;
+                img.style.top = `${topPercent}%`;
+                img.style.transform = `rotate(${rotDeg}deg)`;
+                img.style.zIndex = zIndex;
+
+                img.onclick = function() {
+                    topZIndexCounter++;
+                    img.style.zIndex = topZIndexCounter;
+                    openModal(src);
+                };
+
+                canvas.appendChild(img);
+            });
+        }
+
+        function openModal(imgUrl) {
+            const modal = document.getElementById('image-modal');
+            const modalImg = document.getElementById('modal-img');
+            modalImg.src = imgUrl;
+            modal.style.display = 'flex';
+            modal.scrollLeft = 0;
+        }
+
+        function closeModal(e) {
+            if (e.target.id === 'image-modal') {
+                document.getElementById('image-modal').style.display = 'none';
+            }
+        }
+
+        function closeModalDirect() {
+            document.getElementById('image-modal').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
