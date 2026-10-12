@@ -36,7 +36,29 @@
             transform: translateZ(0);
             will-change: transform, opacity;
         }
+.media-caption {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #888888;
+    margin-top: 0.8rem;
+    margin-bottom: 2.5rem;
+}
+@media (max-width: 768px) {
+    .scatter-photo-item {
+        height: 100px;
+        max-width: 130px;
+    }
+}
 
+@media (max-width: 768px) {
+    .media-caption {
+        font-size: 0.75rem;
+        margin-top: 0.6rem;
+        margin-bottom: 2rem;
+    }
+}
         .header-bar {
             width: 300px;
             display: flex;
@@ -281,16 +303,14 @@
             gap: 2.5rem;
             align-items: flex-start;
         }
-        .exhibition-img {
-            height: 100px;
-            width: auto;
-            max-width: 280px;
-            object-fit: cover;
-            flex-shrink: 0;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            cursor: pointer;
-            transition: opacity 0.3s ease;
-        }
+       .exhibition-img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: 280px;
+    object-fit: contain;
+    background-color: #080808;
+}
         .exhibition-img:hover {
             opacity: 0.8;
         }
@@ -936,6 +956,17 @@ Working across installation, moving image, sound, and print, her practice center
                     title="ayue'Showreel">
                 </iframe>
             </div>
+<div class="bio-video-container" style="margin-bottom: 0.5rem;">
+    <iframe 
+        src="https://player.vimeo.com/video/1234836495?title=0&byline=0&portrait=0&badge=0&autopause=0" 
+        frameborder="0" 
+        allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" 
+        referrerpolicy="strict-origin-when-cross-origin" 
+        allowfullscreen 
+        title="ayue'Showreel">
+    </iframe>
+</div>
+<div class="media-caption">Original Soundtrack by the Artist</div>
         </div>
                     
         <div id="view-cv" style="display: none;">
@@ -1061,7 +1092,8 @@ Working across installation, moving image, sound, and print, her practice center
                 category: 'Generative Art',
                 previewImages: ['mo2.jpg', 'mo1.png'],
                 description: 'Microphone, Generative audio and visual system<br><br>"Mycelium Opera" is an interactive installation exploring the connection between humans, computers, and virtual nature. The work uses digital mycelium to build a decentralized ecosystem. Its growth is driven by organic algorithms and real-time environmental sounds. As the system scans images to create food nodes, mycelium particles spread. A microphone captures ambient noise, causing the digital mycelium to burst, grow, or decay based on sound fluctuations. The system then translates this dynamic growth data into real-time audio signals. By turning the growth process into a responsive sonic landscape, the installation merges visual, auditory, and environmental elements. The work transforms the physical space into a shared network where digital life interacts with the audience.',
-                videoEmbed: '<div class="video-dual-grid"><div class="video-box-item"><iframe src="https://player.vimeo.com/video/1232842310?title=0&byline=0&portrait=0&badge=0&autopause=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="myCELIUM NOTE"></iframe></div><div class="video-box-item"><iframe src="https://player.vimeo.com/video/1232843797?title=0&byline=0&portrait=0&badge=0&autopause=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="myCELIUM SONG"></iframe></div></div>',
+               videoEmbed: '<div class="video-dual-grid" style="margin-bottom: 0.5rem;"><div class="video-box-item"><iframe src="https://player.vimeo.com/video/1232842310?title=0&byline=0&portrait=0&badge=0&autopause=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="myCELIUM NOTE"></iframe></div><div class="video-box-item"><iframe src="https://player.vimeo.com/video/1232843797?title=0&byline=0&portrait=0&badge=0&autopause=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="myCELIUM SONG"></iframe></div></div><div class="media-caption">Video 2 (Mycelium Song): Original Soundtrack by the Artist</div>',
+
                 detailImages: [],
                 gifImages: [
                     'gif/1.GIF',
@@ -1180,7 +1212,7 @@ Working across installation, moving image, sound, and print, her practice center
                 title: 'SELECTED POSTERS',
                 year: '2020–2024',
                 category: '30 Selected Event Visuals & Flyers',
-                description: 'A curated visual archive of 30 party posters designed for club nights, exploring typographic hierarchy and high-contrast layout.',
+                description: 'Selected from a curated visual archive of 200+ party posters designed for club nights.',
                 images: posterImageList
             },
             {
@@ -1444,7 +1476,7 @@ Working across installation, moving image, sound, and print, her practice center
                         <div class="project-list-year">2020–2024 · Space Practice</div>
                     </div>
                     <div class="detail-content" style="margin-bottom: 2.5rem;">
-                        Devenue is an independent underground club and vinyl listening space operated from 2020 to 2024. As founder and creative director, Ayue directed the spatial identity, weekly audio-visual environments, and over 200 underground events.
+                        Devenue is an independent underground club operated from 2020 to 2024. As founder and creative director, Ayue directed the spatial identity, audio-visual environments, and over 200 underground events.
                     </div>
 
                     <div class="entity-sub-section">
@@ -1697,7 +1729,7 @@ Working across installation, moving image, sound, and print, her practice center
                 scatterHtml = `
                     <div class="scatter-canvas-container">
                         <div class="scatter-canvas-header">
-                            <div class="scatter-canvas-title">45 Field Photographs / Interactive Lightbox</div>
+                          
                             <button class="scatter-shuffle-btn" onclick="shufflePlacePhotos()">↻ SHUFFLE</button>
                         </div>
                         <div class="scatter-canvas" id="the-place-scatter-canvas"></div>
@@ -1715,7 +1747,7 @@ Working across installation, moving image, sound, and print, her practice center
 
                 gifTrackHtml = `
                     <div class="gif-two-tracks-container">
-                        <div class="detail-content" style="font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; color: #888888; margin-bottom: 0.5rem;">Generative Process / 20 GIFs Archive (Scroll Horizontally)</div>
+                        <div class="detail-content" style="font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; color: #888888; margin-bottom: 0.5rem;">Sketches</div>
                         <div class="gif-single-track">${t1}</div>
                         <div class="gif-single-track">${t2}</div>
                     </div>
@@ -1740,7 +1772,7 @@ Working across installation, moving image, sound, and print, her practice center
                         return `
                             <div class="long-thumb-box" onclick="openModal('${imgUrl}')">
                                 <img src="${imgUrl}" class="long-thumb-img" alt="Artwork">
-                                <div class="long-thumb-tip">CLICK TO VIEW FULL PANORAMA (SCROLL HORIZONTALLY)</div>
+                                <div class="long-thumb-tip">CLICK TO VIEW FULL PANORAMA </div>
                             </div>
                         `;
                     }
@@ -1764,7 +1796,7 @@ Working across installation, moving image, sound, and print, her practice center
         }
 
         let topZIndexCounter = 100;
-        function shufflePlacePhotos() {
+    function shufflePlacePhotos() {
             const canvas = document.getElementById('the-place-scatter-canvas');
             if (!canvas) return;
 
@@ -1773,6 +1805,7 @@ Working across installation, moving image, sound, and print, her practice center
 
             canvas.innerHTML = '';
             const images = targetProject.scatterImages;
+            const isMobile = window.innerWidth <= 768;
 
             images.forEach((src, index) => {
                 const img = document.createElement('img');
@@ -1780,9 +1813,10 @@ Working across installation, moving image, sound, and print, her practice center
                 img.src = src;
                 img.alt = `The Place ${index + 1}`;
 
-                const leftPercent = Math.random() * 70 + 5;
-                const topPercent = Math.random() * 65 + 5;
-                const rotDeg = (Math.random() * 36) - 18;
+                // 手机端将随机范围扩展至整屏宽度，避免堆叠在左侧
+                const leftPercent = isMobile ? Math.random() * 65 + 5 : Math.random() * 75 + 5;
+                const topPercent = isMobile ? Math.random() * 68 + 4 : Math.random() * 65 + 5;
+                const rotDeg = (Math.random() * 32) - 16;
                 const zIndex = Math.floor(Math.random() * 45) + 1;
 
                 img.style.left = `${leftPercent}%`;
@@ -1799,7 +1833,6 @@ Working across installation, moving image, sound, and print, her practice center
                 canvas.appendChild(img);
             });
         }
-
         function openModal(imgUrl) {
             const modal = document.getElementById('image-modal');
             const modalImg = document.getElementById('modal-img');
