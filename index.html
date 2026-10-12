@@ -1212,7 +1212,14 @@ Working across installation, moving image, sound, and print, her practice center
             }
         ];
 
-        const graphicImageList = [
+     // 1. 全量数据（用于点进详情页展示全部 24 张，支持 + MORE 展开）
+        const graphicImageList = [];
+        for (let i = 1; i <= 24; i++) {
+            graphicImageList.push(`branding/others/${i}.JPG`);
+        }
+
+        // 2. 首页预览专用（写死精选的那 9 张）
+        const selectedAeGraphic = [
             'branding/others/5.JPG',
             'branding/others/6.JPG',
             'branding/others/7.JPG',
@@ -1223,7 +1230,6 @@ Working across installation, moving image, sound, and print, her practice center
             'branding/others/16.JPG',
             'branding/others/4.JPG'
         ];
-
         const aeGraphicData = [
             {
                 title: 'SELECTED GRAPHICS',
@@ -1399,7 +1405,7 @@ Working across installation, moving image, sound, and print, her practice center
             ];
 
             const selectedAeBrand = aeBrandingCases.map(c => c.images[0]);
-            const selectedAeGraphic = aeGraphicData[0].images.slice(0, 10);
+           
 
             const devEventHtml = selectedDevEvents.map(img => `<img class="preview-scroll-img" src="${img}">`).join('');
             const devPrintHtml = selectedDevPrints.map(img => `<img class="preview-scroll-img" src="${img}">`).join('');
@@ -1497,12 +1503,7 @@ Working across installation, moving image, sound, and print, her practice center
                 </div>
             `;
 
-            const isGraphicPage = pageTitle.includes('GRAPHIC');
-
-            dataArray.forEach((item, index) => {
-                const total = item.images.length;
-                const initialLimit = isGraphicPage ? total : 10;
-                const hasMore = total > initialLimit;
+const initialLimit = 10;
 
                 let imagesHtml = '';
                 item.images.forEach((imgUrl, i) => {
