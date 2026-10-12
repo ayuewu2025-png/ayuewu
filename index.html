@@ -316,7 +316,7 @@
             color: rgba(255, 255, 255, 0.75);
         }
 
-.bio-video-container {
+        .bio-video-container {
             position: relative;
             width: 100%;
             max-width: 800px;
@@ -334,17 +334,6 @@
             width: 100%;
             height: 100%;
             border: 0;
-        }      
-  @media (max-width: 768px) {
-            .exhibition-item {
-                flex-direction: column;
-                gap: 1.5rem;
-            }
-            .exhibition-img {
-                width: 100%;
-                max-width: 100%;
-                height: 200px;
-            }
         }
 
         .contact-container {
@@ -479,12 +468,6 @@
             align-items: start;
         }
 
-        @media (max-width: 768px) {
-            .archive-grid-5cols {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
         .archive-expand-btn {
             display: inline-flex;
             align-items: center;
@@ -577,14 +560,6 @@
             opacity: 0.8;
         }
 
-        @media (max-width: 768px) {
-            .the-place-two-grid {
-                grid-template-columns: 1fr;
-                max-width: 100%;
-                margin: 2rem 0;
-            }
-        }
-
         .video-dual-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -607,12 +582,6 @@
             width: 100%;
             height: 100%;
             border: 0;
-        }
-        @media (max-width: 768px) {
-            .video-dual-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
         }
 
         .gif-two-tracks-container {
@@ -723,11 +692,6 @@
             box-shadow: 0 16px 36px rgba(0, 0, 0, 0.95);
             z-index: 999 !important;
         }
-        @media (max-width: 768px) {
-            .scatter-canvas {
-                height: 380px;
-            }
-        }
 
         .long-thumb-box {
             width: 100%;
@@ -793,19 +757,93 @@
             opacity: 1;
         }
 
+        /* 移动端响应式与居中对齐 */
         @media (max-width: 768px) {
-            body { flex-direction: column; }
+            body { 
+                flex-direction: column; 
+                width: 100%;
+            }
             .header-bar {
                 width: 100%;
                 height: auto;
                 position: relative;
                 border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-                padding: 2rem 1.5rem;
+                padding: 2.5rem 1.5rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                box-sizing: border-box;
             }
-            .name-group { margin-bottom: 2rem; align-items: center; text-align: center; }
-            .nav-links { flex-direction: column; gap: 1.5rem; padding-bottom: 0; }
-            .nav-top-group { flex-direction: column; gap: 1.5rem; }
-            .content-wrapper { margin-left: 0; padding: 2rem 1.5rem; }
+            .name-group { 
+                width: 100%;
+                margin-bottom: 2rem; 
+                display: flex;
+                flex-direction: column;
+                align-items: center; 
+                text-align: center; 
+            }
+            .name-title {
+                display: block;
+                width: 100%;
+                text-align: center;
+            }
+            .name-sub {
+                margin-left: 0;
+                text-align: center;
+                width: 100%;
+            }
+            .nav-links { 
+                width: 100%;
+                flex-direction: column; 
+                gap: 1.5rem; 
+                padding-bottom: 0; 
+                align-items: center;
+                text-align: center;
+            }
+            .nav-top-group { 
+                width: 100%;
+                flex-direction: column; 
+                gap: 1.5rem; 
+                align-items: center;
+            }
+            .sub-menu {
+                padding-left: 0;
+                align-items: center;
+            }
+            .sub-sub-menu {
+                padding-left: 0;
+                align-items: center;
+            }
+            .content-wrapper { 
+                margin-left: 0; 
+                padding: 2rem 1.5rem; 
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .the-place-two-grid {
+                grid-template-columns: 1fr;
+                max-width: 100%;
+                margin: 2rem 0;
+            }
+            .video-dual-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            .scatter-canvas {
+                height: 380px;
+            }
+            .archive-grid-5cols {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .exhibition-item {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            .exhibition-img {
+                width: 100%;
+                max-width: 100%;
+                height: 200px;
+            }
         }
     </style>
 </head>
@@ -856,7 +894,7 @@
     </header>
 
     <main class="content-wrapper">
-<div id="view-biography" style="display: none;">
+        <div id="view-biography" style="display: none;">
             <div class="bio-text">
                Ayue Wu is an interdisciplinary artist based in Porto.
 
@@ -1087,12 +1125,12 @@ Working across installation, moving image, sound, and print, her practice center
 
         const eventImageList = [];
         for (let i = 1; i <= 22; i++) {
-            eventImageList.push(`space-event/event/e${I}.JPG`);
+            eventImageList.push(`space-event/event/e${i}.JPG`);
         }
 
         const spaceImageList = [];
         for (let i = 1; i <= 16; i++) {
-            spaceImageList.push(`space-event/space/s${I}.JPG`);
+            spaceImageList.push(`space-event/space/s${i}.JPG`);
         }
 
         const deVenueEventsData = [
