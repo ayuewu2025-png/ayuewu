@@ -219,7 +219,7 @@
             font-size: 0.95rem;
             font-weight: 500;
             color: #ffffff;
-letter-spacing: -0.01em;
+            letter-spacing: -0.01em;
         }
         .cv-item-time {
             font-size: 0.8rem;
@@ -229,14 +229,14 @@ letter-spacing: -0.01em;
             font-size: 0.85rem;
             color: #aaaaaa;
             margin-bottom: 0.4rem;
-letter-spacing: -0.01em;
+            letter-spacing: -0.01em;
         }
         .cv-item-desc {
             font-size: 0.85rem;
             line-height: 1.6;
-letter-spacing: -0.01em;
+            letter-spacing: -0.01em;
             color: rgba(255, 255, 255, 0.75);
-text-align: justify;
+            text-align: justify;
         }
         .cv-skills-grid {
             display: grid;
@@ -245,8 +245,8 @@ text-align: justify;
             font-size: 0.85rem;
             line-height: 1.6;
             color: rgba(255, 255, 255, 0.8);
-letter-spacing: -0.01em;
-text-align: justify;
+            letter-spacing: -0.01em;
+            text-align: justify;
         }
         .cv-skills-row span {
             color: #ffffff;
@@ -322,8 +322,8 @@ text-align: justify;
             font-size: 0.85rem;
             line-height: 1.6;
             letter-spacing: -0.01em;
-    color: rgba(255, 255, 255, 0.75);
-    text-align: justify;
+            color: rgba(255, 255, 255, 0.75);
+            text-align: justify;
         }
 
         .bio-video-container {
@@ -403,7 +403,7 @@ text-align: justify;
             color: #fff;
             cursor: pointer;
             transition: opacity 0.3s;
-letter-spacing: -0.01em;
+            letter-spacing: -0.01em;
         }
         .project-list-title:hover { opacity: 0.6; }
         .project-list-year {
@@ -527,10 +527,10 @@ letter-spacing: -0.01em;
 
         .detail-title {
             font-family: 'DFH-DIN', sans-serif;
-            font-size: 1.15rem;
+            font-size: 1.8rem;
             color: #fff;
             margin-bottom: 0.8rem;
-letter-spacing: -0.01em;
+            letter-spacing: -0.01em;
         }
         .detail-meta {
             color: #888;
@@ -543,8 +543,8 @@ letter-spacing: -0.01em;
             color: rgba(255, 255, 255, 0.85);
             max-width: 800px;
             margin-bottom: 3.5rem;
-letter-spacing: -0.01em;
-text-align: justify;
+            letter-spacing: -0.01em;
+            text-align: justify;
         }
         
         /* 标准大图样式：水平居中，最大600px */
@@ -857,6 +857,17 @@ text-align: justify;
                 width: 100%;
                 max-width: 100%;
                 height: 200px;
+            }
+            .detail-title {
+                font-size: 1.5rem;
+            }
+            .bio-text,
+            .detail-content,
+            .exhibition-desc,
+            .cv-item-desc {
+                font-size: 0.82rem;
+                line-height: 1.6;
+                text-align: justify;
             }
         }
     </style>
@@ -1226,7 +1237,7 @@ Working across installation, moving image, sound, and print, her practice center
             }
         ];
 
-     // 1. 全量数据（用于点进详情页展示全部 24 张，支持 + MORE 展开）
+        // 1. 全量数据（用于点进详情页展示全部 24 张，支持 + MORE 展开）
         const graphicImageList = [];
         for (let i = 1; i <= 24; i++) {
             graphicImageList.push(`branding/others/${i}.JPG`);
@@ -1244,6 +1255,7 @@ Working across installation, moving image, sound, and print, her practice center
             'branding/others/16.JPG',
             'branding/others/4.JPG'
         ];
+
         const aeGraphicData = [
             {
                 title: 'SELECTED GRAPHICS',
@@ -1419,7 +1431,6 @@ Working across installation, moving image, sound, and print, her practice center
             ];
 
             const selectedAeBrand = aeBrandingCases.map(c => c.images[0]);
-           
 
             const devEventHtml = selectedDevEvents.map(img => `<img class="preview-scroll-img" src="${img}">`).join('');
             const devPrintHtml = selectedDevPrints.map(img => `<img class="preview-scroll-img" src="${img}">`).join('');
@@ -1517,7 +1528,10 @@ Working across installation, moving image, sound, and print, her practice center
                 </div>
             `;
 
-const initialLimit = 10;
+            dataArray.forEach((item, index) => {
+                const total = item.images.length;
+                const initialLimit = 10;
+                const hasMore = total > initialLimit;
 
                 let imagesHtml = '';
                 item.images.forEach((imgUrl, i) => {
