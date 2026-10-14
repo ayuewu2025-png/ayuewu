@@ -195,7 +195,7 @@
             padding: 4rem;
             flex: 1;
             box-sizing: border-box;
-            min-height: 100vh;
+            min-height: auto;
         }
 
         .bio-text {
@@ -768,11 +768,14 @@
         .image-modal:active {
             cursor: grabbing;
         }
-        .modal-long-img {
-            height: 75vh;
+     .modal-long-img {
+            max-height: 80vh;
+            max-width: 90vw;
             width: auto;
-            max-width: none;
+            height: auto;
+            object-fit: contain;
             display: block;
+            margin: auto;
         }
         .modal-close-btn {
             position: fixed;
@@ -795,6 +798,16 @@
                 flex-direction: column; 
                 width: 100%;
             }
+@media (max-width: 768px) {
+            .image-modal {
+                padding: 0 1rem;
+                justify-content: center;
+            }
+            .modal-long-img {
+                max-width: 95vw;
+                max-height: 75vh;
+            }
+        }
             .header-bar {
                 width: 100%;
                 height: auto;
@@ -846,11 +859,15 @@
                 padding-left: 0;
                 align-items: center;
             }
-            .content-wrapper { 
+          .content-wrapper { 
                 margin-left: 0; 
-                padding: 2rem 1.5rem; 
+                padding: 0 1.5rem; 
                 width: 100%;
                 box-sizing: border-box;
+                min-height: 0;
+            }
+            .content-wrapper:has(> div[style*="display: block"]) {
+                padding: 2rem 1.5rem;
             }
             .the-place-two-grid {
                 grid-template-columns: 1fr;
@@ -879,13 +896,32 @@
             .detail-title {
                 font-size: 1.5rem;
             }
-            .bio-text,
+          .bio-text,
             .detail-content,
-            .exhibition-desc,
-            .cv-item-desc {
+            .exhibition-desc {
                 font-size: 0.82rem;
                 line-height: 1.6;
                 text-align: justify;
+            }
+            .cv-section-title {
+                font-size: 1.05rem;
+                margin-bottom: 1.2rem;
+            }
+            .cv-item-role {
+                font-size: 0.88rem;
+            }
+            .cv-item-time {
+                font-size: 0.75rem;
+            }
+            .cv-item-place {
+                font-size: 0.78rem;
+            }
+            .cv-item-desc,
+            .cv-skills-grid {
+                font-size: 0.78rem;
+                line-height: 1.5;
+                text-align: left;
+                letter-spacing: 0;
             }
         }
     </style>
@@ -906,7 +942,7 @@
         <nav class="nav-links">
             <div class="nav-top-group">
                 <div class="nav-item" id="nav-work">
-                    <a class="nav-link" onclick="openCategory('art')">WORK</a>
+                 <a class="nav-link" id="link-main-work" onclick="openWorkAll()">WORK</a>
                     <div class="sub-menu">
                         <div class="sub-item-group" id="group-art">
                             <a class="sub-link" id="link-cat-art" onclick="openCategory('art')">Art</a>
@@ -921,7 +957,7 @@
                 </div>
 
                 <div class="nav-item" id="nav-about">
-                    <a class="nav-link" onclick="openBio()">ABOUT</a>
+                  <a class="nav-link" id="link-main-about" onclick="openAboutAll()">ABOUT</a>
                     <div class="sub-menu">
                         <a onclick="openBio()" class="sub-link" id="link-bio">Biography</a>
                         <a onclick="openExhibitions()" class="sub-link" id="link-exhibitions">Exhibitions</a>
@@ -1138,21 +1174,21 @@ Working across installation, moving image, sound, and print, her practice center
             }
         ];
 
-        const exhibitionsData = [
+       const exhibitionsData = [
             {
-                image: 'exhibition/e1.JPG',
+                images: ['exhibition/e1.JPG', 'exhibition/e1-1.JPG', 'exhibition/e1-2.JPG', 'exhibition/e1-3.JPG', 'exhibition/e1-4.JPG'],
                 title: 'one as part of a texture',
                 year: '2026',
                 description: 'Group exhibition at Branda, Porto. Presenting "Mycelium Opera", an interactive audiovisual ecosystem driven by real-time ambient acoustics and computational mycelium growth.'
             },
             {
-                image: 'exhibition/e2.JPG',
+                images: ['exhibition/e2.JPG', 'exhibition/e2-1.JPG', 'e2-2.JPG', 'e2-3.JPG'],
                 title: 'Place or Placed',
                 year: '2022',
                 description: 'Exhibition at Tianmuli Gallery, Hangzhou. The installation investigates spatial boundaries and physical ownership using chairs, isolation belts, sound speakers, and visual projections.'
             },
             {
-                image: 'exhibition/e3.JPG',
+                images: ['exhibition/e3.JPG', 'exhibition/e3-1.JPG', 'exhibition/e3-2.JPG', 'exhibition/e3-3.JPG', 'exhibition/e3-4.JPG'],
                 title: 'Native Soundscape: The Sonic Geography of Suzhou',
                 year: '2021',
                 description: 'Featured at Hanshan Art Museum. The work "The Place" uses chairs and localized sound field recordings to capture the vernacular acoustic memories and street life sovereignty.'
@@ -1313,11 +1349,10 @@ Working across installation, moving image, sound, and print, her practice center
             document.querySelectorAll('.locked').forEach(el => el.classList.remove('locked'));
         }
 
-        function clearSidebarHighlight() {
+       function clearSidebarHighlight() {
             document.querySelectorAll('.project-link').forEach(el => el.classList.remove('highlight'));
             document.querySelectorAll('.sub-link').forEach(el => el.classList.remove('highlight'));
-            const contactLink = document.getElementById('link-contact');
-            if (contactLink) contactLink.classList.remove('highlight');
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('highlight'));
         }
 
         function hideAllViews() {
@@ -1359,7 +1394,7 @@ Working across installation, moving image, sound, and print, her practice center
             window.scrollTo(0, 0);
         }
 
-        function openExhibitions() {
+       function openExhibitions() {
             clearAllLocks();
             document.getElementById('nav-about').classList.add('locked');
             clearSidebarHighlight();
@@ -1367,28 +1402,32 @@ Working across installation, moving image, sound, and print, her practice center
             if (exhLink) exhLink.classList.add('highlight');
 
             hideAllViews();
-            const exhContainer = document.getElementById('exhibition-list-content');
-            exhContainer.innerHTML = '';
-
-            exhibitionsData.forEach(item => {
-                exhContainer.insertAdjacentHTML('beforeend', `
-                    <div class="exhibition-item">
-                        <img class="exhibition-img" src="${item.image}" alt="${item.title}" onclick="openModal('${item.image}')">
-                        <div class="exhibition-info">
-                            <div class="exhibition-title-row">
-                                <div class="exhibition-title">${item.title}</div>
-                                <div class="exhibition-year">${item.year}</div>
-                            </div>
-                            <div class="exhibition-desc">${item.description}</div>
-                        </div>
-                    </div>
-                `);
-            });
-
+            renderExhibitionsContent();
             document.getElementById('view-exhibitions').style.display = 'block';
             window.scrollTo(0, 0);
         }
 
+        function renderExhibitionsContent() {
+            const exhContainer = document.getElementById('exhibition-list-content');
+            if (!exhContainer) return;
+            exhContainer.innerHTML = '';
+
+            exhibitionsData.forEach(item => {
+                const trackImgs = item.images.map(img => `<img class="preview-scroll-img" src="${img}" alt="${item.title}" onclick="openModal('${img}')">`).join('');
+                exhContainer.insertAdjacentHTML('beforeend', `
+                    <div class="exhibition-item" style="flex-direction: column; gap: 1.5rem;">
+                        <div class="exhibition-info" style="width: 100%;">
+                            <div class="exhibition-title-row">
+                                <div class="exhibition-title">${item.title}</div>
+                                <div class="exhibition-year">${item.year}</div>
+                            </div>
+                            <div class="exhibition-desc" style="margin-bottom: 1rem;">${item.description}</div>
+                        </div>
+                        <div class="preview-scroll-track">${trackImgs}</div>
+                    </div>
+                `);
+            });
+        }
         function openContact() {
             clearAllLocks();
             clearSidebarHighlight();
@@ -1421,10 +1460,13 @@ Working across installation, moving image, sound, and print, her practice center
             }
         }
 
-        function renderDesignHome() {
+function renderDesignHome() {
             const listContainer = document.getElementById('view-works-list');
             listContainer.innerHTML = '';
+            renderDesignHomeBlocks(listContainer);
+        }
 
+        function renderDesignHomeBlocks(container) {
             const selectedDevEvents = [
                 'space-event/space/s1.JPG',
                 'space-event/event/e1.JPG',
@@ -1458,14 +1500,14 @@ Working across installation, moving image, sound, and print, her practice center
             const aeBrandHtml = selectedAeBrand.map(img => `<img class="preview-scroll-img" src="${img}">`).join('');
             const aeGraphicHtml = selectedAeGraphic.map(img => `<img class="preview-scroll-img" src="${img}">`).join('');
 
-            listContainer.insertAdjacentHTML('beforeend', `
-                <div class="design-entity-item" id="entity-design-devenue">
+            container.insertAdjacentHTML('beforeend', `
+                <div class="design-entity-item" id="entity-design-devenue" style="margin-top: 4rem;">
                     <div class="project-list-header">
                         <div class="project-list-title">DEVENUE CLUB</div>
                         <div class="project-list-year">2020–2024 · Space Practice</div>
                     </div>
                     <div class="detail-content" style="margin-bottom: 2.5rem;">
-                        Devenue is an independent underground club operated from 2020 to 2024. As founder and creative director, Ayue directed the spatial identity, audio-visual environments, and over 200 underground events.
+                        Devenue is an independent underground club and vinyl listening space operated from 2020 to 2024. As founder and creative director, Ayue directed the spatial identity, weekly audio-visual environments, and over 200 underground events.
                     </div>
 
                     <div class="entity-sub-section">
@@ -1838,6 +1880,59 @@ Working across installation, moving image, sound, and print, her practice center
 
         function closeModalDirect() {
             document.getElementById('image-modal').style.display = 'none';
+        }
+function openWorkAll() {
+            clearAllLocks();
+            // 只锁定顶级 WORK，展开 Art 和 Design 二级菜单，不展开第三级
+            document.getElementById('nav-work').classList.add('locked');
+            clearSidebarHighlight();
+            const workMainLink = document.getElementById('link-main-work');
+            if (workMainLink) workMainLink.classList.add('highlight');
+
+            hideAllViews();
+            const listContainer = document.getElementById('view-works-list');
+            listContainer.innerHTML = '';
+
+            // 1. 渲染全部 Art 预览列表
+            artProjects.forEach(project => {
+                let imagesHtml = '';
+                project.previewImages.forEach(img => {
+                    imagesHtml += `<img class="project-image-box" src="${img}" alt="Preview Image">`;
+                });
+                listContainer.insertAdjacentHTML('beforeend', `
+                    <div class="project-list-item" onclick="openProjectDetail('${project.id}', 'art')">
+                        <div class="project-list-header">
+                            <div class="project-list-title">${project.title}</div>
+                            <div class="project-list-year">${project.year} · ${project.category}</div>
+                        </div>
+                        <div class="project-list-images">${imagesHtml}</div>
+                    </div>
+                `);
+            });
+
+            // 2. 紧接着渲染 Design 内容
+            renderDesignHomeBlocks(listContainer);
+
+            listContainer.style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function openAboutAll() {
+            clearAllLocks();
+            // 只锁定顶级 ABOUT，展开 Biography / Exhibitions / CV，不锁定单项
+            document.getElementById('nav-about').classList.add('locked');
+            clearSidebarHighlight();
+            const aboutMainLink = document.getElementById('link-main-about');
+            if (aboutMainLink) aboutMainLink.classList.add('highlight');
+
+            hideAllViews();
+            renderExhibitionsContent();
+
+            // 同时展示 Biography、Exhibitions 与 CV
+            document.getElementById('view-biography').style.display = 'block';
+            document.getElementById('view-exhibitions').style.display = 'block';
+            document.getElementById('view-cv').style.display = 'block';
+            window.scrollTo(0, 0);
         }
     </script>
 </body>
